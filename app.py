@@ -14,7 +14,44 @@ st.set_page_config(
 )
 
 # ============================================================
-# 自定义CSS样式 - 全面美化
+# 常量定义
+# ============================================================
+MODULE_KEY_MAP = {
+    3: "blueprint",
+    4: "hands_on",
+    5: "assessment",
+    6: "materials",
+    7: "transfer",
+    8: "evaluation"
+}
+
+MODULE_LABELS = {
+    "blueprint": "📋 培训蓝图",
+    "hands_on": "🔧 实操任务",
+    "assessment": "🎯 考核系统",
+    "materials": "📑 培训素材",
+    "transfer": "🔄 学习迁移",
+    "evaluation": "📊 效果评估"
+}
+
+MODULE_DESCRIPTIONS = {
+    "blueprint": "产品定位+模块全景+场景串讲+术语+问答+考核",
+    "hands_on": "根据岗位等级自动判断L3/L2/L1",
+    "assessment": "场景分析+实操演练+模拟答辩",
+    "materials": "PPT大纲+讲师手册+练习册+速查卡",
+    "transfer": "30天计划，70-20-10模型",
+    "evaluation": "Kirkpatrick四级：满意度→前后测→行为→ROI"
+}
+
+STEP_NAMES = [
+    "产品校验", "培训参数", "自适应判断", "培训蓝图",
+    "实操任务", "考核系统", "培训素材", "学习迁移", "效果评估"
+]
+
+STEP_ICONS = ["📝", "🎯", "🧠", "📋", "🔧", "🎯", "📑", "🔄", "📊"]
+
+# ============================================================
+# 自定义CSS样式
 # ============================================================
 st.markdown("""
 <style>
@@ -110,6 +147,11 @@ st.markdown("""
         background: #e2e8f0;
         color: #a0aec0;
     }
+    .step-dot-skipped {
+        background: #fee;
+        color: #999;
+        text-decoration: line-through;
+    }
     
     /* ===== 步骤卡片 ===== */
     .step-card {
@@ -132,6 +174,9 @@ st.markdown("""
     }
     .step-card-header-active {
         background: linear-gradient(135deg, #ebf4ff 0%, #bee3f8 100%);
+    }
+    .step-card-header-skipped {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
     }
     .step-number {
         width: 40px;
@@ -156,10 +201,19 @@ st.markdown("""
         background: #e2e8f0;
         color: #a0aec0;
     }
+    .step-number-skipped {
+        background: #fecaca;
+        color: #991b1b;
+    }
     .step-title-text {
         font-size: 1.15rem;
         font-weight: 700;
         color: #1a202c;
+    }
+    .step-title-text-skipped {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #999;
     }
     .step-status-badge {
         margin-left: auto;
@@ -179,6 +233,10 @@ st.markdown("""
     .badge-pending {
         background: #e2e8f0;
         color: #a0aec0;
+    }
+    .badge-skipped {
+        background: #fecaca;
+        color: #991b1b;
     }
     .step-card-body {
         padding: 1.2rem 1.5rem 1.5rem;
@@ -215,6 +273,34 @@ st.markdown("""
         color: #22543d;
         line-height: 1.6;
     }
+    .skip-box {
+        background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+        border-left: 5px solid #ef4444;
+        padding: 14px 18px;
+        border-radius: 0 12px 12px 0;
+        margin: 12px 0;
+        font-size: 0.95rem;
+        color: #991b1b;
+        line-height: 1.6;
+    }
+    
+    /* ===== 模块选择卡片 ===== */
+    .module-card {
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1rem 1.2rem;
+        margin: 0.5rem 0;
+        transition: all 0.2s ease;
+    }
+    .module-card:hover {
+        border-color: #667eea;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+    }
+    .module-card-selected {
+        border-color: #667eea;
+        background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+    }
     
     /* ===== 结果展示卡片 ===== */
     .result-card {
@@ -247,11 +333,9 @@ st.markdown("""
         transform: translateY(-1px);
         box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
     }
-    /* 主按钮 */
     .stButton > button[data-baseweb="button"][kind="primary"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
     }
-    /* 次按钮 */
     .stButton > button[data-baseweb="button"]:not([kind="primary"]) {
         background: #f7fafc !important;
         color: #4a5568 !important;
@@ -414,7 +498,8 @@ st.markdown("""
 def init_state():
     defaults = {
         "api_key": "",
-        "api_valid": False,
+        "show_api_input": False,
+        "selected_modules": ["blueprint", "hands_on", "assessment", "materials", "transfer", "evaluation"],
         "step_completed": [False] * 9,
         "product_input": "",
         "product_validation": "",
@@ -454,6 +539,26 @@ def init_state():
             st.session_state[k] = v
 
 init_state()
+
+# ============================================================
+# 辅助函数
+# ============================================================
+def get_selected_steps():
+    """获取当前选中的步骤索引列表"""
+    base = [0, 1, 2]
+    gen = [i for i in range(3, 9) if MODULE_KEY_MAP[i] in st.session_state.selected_modules]
+    return base + gen
+
+def get_module_step_index(module_key):
+    """获取模块对应的步骤索引"""
+    for step, key in MODULE_KEY_MAP.items():
+        if key == module_key:
+            return step
+    return None
+
+def is_module_selected(module_key):
+    """判断模块是否被选中"""
+    return module_key in st.session_state.selected_modules
 
 # ============================================================
 # API 调用函数
@@ -665,70 +770,125 @@ SYS_EVALUATION = """你是一位资深企业培训设计专家。生成Kirkpatri
 # 侧边栏
 # ============================================================
 with st.sidebar:
-    st.markdown("### 🎓 AI+培训设计器")
-    st.markdown("<div style='color:#a0aec0;font-size:0.9rem;margin-bottom:1.5rem;'>v3.1 全生命周期版</div>", unsafe_allow_html=True)
+    # --- 项目标题区 ---
+    st.markdown("""
+    <div style='text-align:center;margin-bottom:1.5rem;'>
+        <div style='font-size:2.5rem;margin-bottom:0.3rem;'>🎓</div>
+        <div style='font-size:1.3rem;font-weight:800;color:white;'>AI+培训设计器</div>
+        <div style='font-size:0.85rem;color:#a0aec0;margin-top:0.2rem;'>v3.1 全生命周期版</div>
+    </div>
+    """, unsafe_allow_html=True)
     
     st.divider()
     
-    # API Key 输入
-    st.markdown("#### 🔑 API 设置")
-    api_key = st.text_input(
-        "DeepSeek API Key",
-        type="password",
-        value=st.session_state.api_key,
-        help="在 platform.deepseek.com 注册获取",
-        label_visibility="collapsed"
-    )
-    if api_key != st.session_state.api_key:
-        st.session_state.api_key = api_key
-        st.rerun()
+    # --- 功能导航区 ---
+    st.markdown("<div style='color:white;font-size:0.95rem;font-weight:700;margin-bottom:0.8rem;'>📍 功能导航</div>", unsafe_allow_html=True)
     
-    if st.session_state.api_key:
-        st.success("✅ API Key 已设置")
-    else:
-        st.warning("⚠️ 请先设置 API Key")
-    
-    st.divider()
-    
-    # 步骤导航
-    st.markdown("#### 📋 步骤导航")
-    step_names = [
-        "产品校验", "培训参数", "自适应判断", "培训蓝图",
-        "实操任务", "考核系统", "培训素材", "学习迁移", "效果评估"
-    ]
-    for i, name in enumerate(step_names):
+    selected_steps = get_selected_steps()
+    for i in range(9):
+        step_name = STEP_NAMES[i]
+        step_icon = STEP_ICONS[i]
+        is_selected = i in selected_steps
+        
+        if not is_selected:
+            # 未选中的模块显示为跳过状态
+            st.markdown(
+                f"<div style='color:#718096;font-size:0.8rem;margin:3px 0;padding-left:4px;'>⛔ Step {i}: {step_name}（跳过）</div>",
+                unsafe_allow_html=True
+            )
+            continue
+        
         if st.session_state.step_completed[i]:
             icon = "✅"
             color = "#48bb78"
+            status = "已完成"
         elif i == 0 or st.session_state.step_completed[i-1]:
             icon = "▶️"
             color = "#667eea"
+            status = "进行中"
         else:
             icon = "🔒"
             color = "#a0aec0"
+            status = "待开始"
+        
         st.markdown(
-            f"<div style='color:{color};font-size:0.85rem;margin:4px 0;'>{icon} Step {i}: {name}</div>",
+            f"<div style='color:{color};font-size:0.85rem;margin:3px 0;padding-left:4px;'>{icon} Step {i}: {step_name}</div>",
             unsafe_allow_html=True
         )
     
     st.divider()
     
-    # 重置按钮
+    # --- API 设置区（可折叠） ---
+    with st.expander("🔑 API 设置", expanded=not st.session_state.api_key):
+        if st.session_state.api_key and not st.session_state.show_api_input:
+            # 已设置，显示状态和修改按钮
+            st.success("✅ API Key 已设置")
+            if st.button("✏️ 修改 API Key", use_container_width=True):
+                st.session_state.show_api_input = True
+                st.rerun()
+        else:
+            # 显示输入框
+            api_key = st.text_input(
+                "DeepSeek API Key",
+                type="password",
+                value=st.session_state.api_key,
+                help="在 platform.deepseek.com 注册获取",
+                label_visibility="collapsed",
+                placeholder="在此粘贴 API Key"
+            )
+            if api_key != st.session_state.api_key:
+                st.session_state.api_key = api_key
+                if api_key:
+                    st.session_state.show_api_input = False
+                st.rerun()
+            
+            if st.session_state.api_key:
+                st.success("✅ 已保存")
+            else:
+                st.info("💡 请输入 API Key 以使用生成功能")
+            
+            st.markdown("<div style='font-size:0.75rem;color:#a0aec0;'>数据仅保存在当前会话中，刷新页面后需重新输入</div>", unsafe_allow_html=True)
+    
+    st.divider()
+    
+    # --- 模块选择快捷入口 ---
+    with st.expander("📦 输出模块选择", expanded=False):
+        st.markdown("<div style='font-size:0.85rem;color:#a0aec0;margin-bottom:0.5rem;'>随时修改要生成的模块</div>", unsafe_allow_html=True)
+        for key in ["blueprint", "hands_on", "assessment", "materials", "transfer", "evaluation"]:
+            label = MODULE_LABELS[key]
+            checked = st.checkbox(label, value=(key in st.session_state.selected_modules), key=f"sidebar_module_{key}")
+            if checked and key not in st.session_state.selected_modules:
+                st.session_state.selected_modules.append(key)
+            elif not checked and key in st.session_state.selected_modules:
+                st.session_state.selected_modules.remove(key)
+    
+    st.divider()
+    
+    # --- 项目信息区 ---
+    st.markdown("""
+    <div style='font-size:0.75rem;color:#718096;text-align:center;'>
+        <div style='margin-bottom:0.3rem;'>基于 ADDIE + Bloom + Kirkpatrick</div>
+        <div style='margin-bottom:0.3rem;'>+ 70-20-10 方法论框架</div>
+        <div style='margin-top:0.5rem;'>Made with ❤️ by ChelseaPYC</div>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    st.divider()
+    
+    # --- 重置按钮 ---
     if st.button("🔄 重置所有数据", use_container_width=True):
         for key in list(st.session_state.keys()):
             del st.session_state[key]
         init_state()
         st.rerun()
-    
-    # 底部信息
-    st.markdown("<div style='margin-top:2rem;color:#718096;font-size:0.75rem;text-align:center;'>Made with ❤️ by AI+培训设计器</div>", unsafe_allow_html=True)
 
 # ============================================================
 # 主页面 - Hero区域
 # ============================================================
-completed_count = sum(st.session_state.step_completed[:9])
-total_steps = 9
-progress_pct = int((completed_count / total_steps) * 100)
+selected_steps = get_selected_steps()
+completed_count = sum(st.session_state.step_completed[i] for i in selected_steps)
+total_selected = len(selected_steps)
+progress_pct = int((completed_count / total_selected) * 100) if total_selected > 0 else 0
 
 st.markdown(f"""
 <div class='hero-container'>
@@ -743,8 +903,11 @@ st.markdown(f"""
 # ============================================================
 step_labels = ["校验", "参数", "判断", "蓝图", "实操", "考核", "素材", "迁移", "评估"]
 dots_html = ""
-for i in range(total_steps):
-    if st.session_state.step_completed[i]:
+for i in range(9):
+    if i not in selected_steps:
+        dot_class = "step-dot step-dot-skipped"
+        dot_text = "✕"
+    elif st.session_state.step_completed[i]:
         dot_class = "step-dot step-dot-done"
         dot_text = "✓"
     elif i == 0 or st.session_state.step_completed[i-1]:
@@ -758,7 +921,7 @@ for i in range(total_steps):
 st.markdown(f"""
 <div class='progress-container'>
     <div style='display:flex;justify-content:space-between;align-items:center;'>
-        <div class='progress-text'>📊 完成进度：{completed_count} / {total_steps} 步骤</div>
+        <div class='progress-text'>📊 完成进度：{completed_count} / {total_selected} 步骤</div>
         <div style='font-size:1.4rem;font-weight:800;color:#667eea;'>{progress_pct}%</div>
     </div>
     <div class='progress-bar-bg'>
@@ -852,7 +1015,7 @@ with st.expander("📝 Step 0: 产品理解校验（防幻觉）", expanded=step
         
         col_ok, col_next = st.columns([1, 2])
         with col_ok:
-            confirm = st.checkbox("✅ 我已确认上述产品理解正确，可以基于此生成培训方案")
+            confirm = st.checkbox("✅ 我已确认上述产品理解正确，可以基于此生成培训方案", value=st.session_state.validation_confirmed)
         with col_next:
             if confirm and not st.session_state.validation_confirmed:
                 if st.button("➡️ 确认并进入下一步", use_container_width=True):
@@ -865,14 +1028,14 @@ with st.expander("📝 Step 0: 产品理解校验（防幻觉）", expanded=step
                 st.rerun()
 
 # ============================================================
-# Step 1: 收集培训参数
+# Step 1: 收集培训参数 + 选择输出模块
 # ============================================================
 step1_expanded = st.session_state.step_completed[0] and not st.session_state.step_completed[1]
 with st.expander("🎯 Step 1: 收集培训参数", expanded=step1_expanded):
     if not st.session_state.step_completed[0]:
         st.info("请先完成 Step 0 产品理解校验")
     else:
-        st.markdown("<div class='info-box'>⚙️ 设置培训的基本参数，AI会根据这些参数调整内容深度、互动方式和考核方式。</div>", unsafe_allow_html=True)
+        st.markdown("<div class='info-box'>⚙️ 设置培训的基本参数和输出模块，AI会根据这些参数调整内容深度、互动方式和生成范围。</div>", unsafe_allow_html=True)
         
         col1, col2 = st.columns(2)
         with col1:
@@ -910,13 +1073,42 @@ with st.expander("🎯 Step 1: 收集培训参数", expanded=step1_expanded):
         st.session_state.prior_knowledge = prior_knowledge
         st.session_state.team_size = team_size
         
-        st.session_state.training_params = {
-            "target_role": target_role,
-            "training_duration": training_duration,
-            "experience_level": experience_level,
-            "prior_knowledge": prior_knowledge,
-            "team_size": team_size
-        }
+        # --- 模块选择区域 ---
+        st.markdown("---")
+        st.subheader("📦 选择输出模块")
+        st.markdown("<div style='font-size:0.9rem;color:#666;'>请选择需要生成的内容模块，未选中的模块将被跳过。培训蓝图为必选项，因为其他模块依赖它。</div>", unsafe_allow_html=True)
+        
+        cols = st.columns(3)
+        for i, key in enumerate(["blueprint", "hands_on", "assessment", "materials", "transfer", "evaluation"]):
+            with cols[i % 3]:
+                is_required = (key == "blueprint")
+                label = MODULE_LABELS[key]
+                desc = MODULE_DESCRIPTIONS[key]
+                
+                if is_required:
+                    checked = st.checkbox(f"{label} *", value=True, disabled=True, key=f"module_{key}")
+                    st.caption(f"{desc} （必选）")
+                    if key not in st.session_state.selected_modules:
+                        st.session_state.selected_modules.append(key)
+                else:
+                    current_val = key in st.session_state.selected_modules
+                    checked = st.checkbox(label, value=current_val, key=f"module_{key}")
+                    st.caption(desc)
+                    if checked and key not in st.session_state.selected_modules:
+                        st.session_state.selected_modules.append(key)
+                    elif not checked and key in st.session_state.selected_modules:
+                        st.session_state.selected_modules.remove(key)
+        
+        # 快捷操作按钮
+        col_all, col_none, col_spacer = st.columns([1, 1, 4])
+        with col_all:
+            if st.button("☑️ 全选", use_container_width=True):
+                st.session_state.selected_modules = ["blueprint", "hands_on", "assessment", "materials", "transfer", "evaluation"]
+                st.rerun()
+        with col_none:
+            if st.button("⬜ 取消（保留蓝图）", use_container_width=True):
+                st.session_state.selected_modules = ["blueprint"]
+                st.rerun()
         
         st.markdown("---")
         col_btn1, col_btn2, col_btn3 = st.columns([2, 1, 1])
@@ -1043,16 +1235,19 @@ with st.expander("🧠 Step 2: 自适应判断", expanded=step2_expanded):
                 st.rerun()
 
 # ============================================================
-# Step 3: 生成培训蓝图
+# Step 3: 生成培训蓝图（条件显示）
 # ============================================================
-step3_expanded = st.session_state.step_completed[2] and not st.session_state.step_completed[3]
-with st.expander("📋 Step 3: 生成培训蓝图", expanded=step3_expanded):
+step3_expanded = st.session_state.step_completed[2] and not st.session_state.step_completed[3] and is_module_selected("blueprint")
+step3_collapsed = st.session_state.step_completed[3] and is_module_selected("blueprint")
+with st.expander("📋 Step 3: 生成培训蓝图", expanded=(step3_expanded or step3_collapsed)):
     if not st.session_state.step_completed[2]:
         st.info("请先完成 Step 2 自适应判断")
+    elif not is_module_selected("blueprint"):
+        st.markdown("<div class='skip-box'>⛔ 此模块已跳过（未在模块选择中勾选）。如需生成，请返回 Step 1 勾选「培训蓝图」。</div>", unsafe_allow_html=True)
     else:
         col_btn = st.columns([2, 2, 2])[0]
         with col_btn:
-            if st.button("🚀 生成培训蓝图", use_container_width=True):
+            if st.button("🚀 生成培训蓝图", use_container_width=True, key="btn_blueprint"):
                 if not st.session_state.api_key:
                     st.error("请先在侧边栏设置 API Key")
                 else:
@@ -1115,17 +1310,20 @@ A: ...
             st.markdown("---")
             col_btn1, col_btn2 = st.columns([2, 1])
             with col_btn1:
-                if st.button("✅ 确认蓝图并进入下一步", use_container_width=True):
+                if st.button("✅ 确认蓝图并进入下一步", use_container_width=True, key="confirm_blueprint"):
                     st.session_state.step_completed[3] = True
                     st.rerun()
 
 # ============================================================
-# Step 4: 生成软件实操任务
+# Step 4: 生成软件实操任务（条件显示）
 # ============================================================
-step4_expanded = st.session_state.step_completed[3] and not st.session_state.step_completed[4]
-with st.expander("🔧 Step 4: 生成软件实操任务（条件触发）", expanded=step4_expanded):
+step4_expanded = st.session_state.step_completed[3] and not st.session_state.step_completed[4] and is_module_selected("hands_on")
+step4_collapsed = st.session_state.step_completed[4] and is_module_selected("hands_on")
+with st.expander("🔧 Step 4: 生成软件实操任务（条件触发）", expanded=(step4_expanded or step4_collapsed)):
     if not st.session_state.step_completed[3]:
         st.info("请先完成 Step 3 培训蓝图")
+    elif not is_module_selected("hands_on"):
+        st.markdown("<div class='skip-box'>⛔ 此模块已跳过（未在模块选择中勾选）。如需生成，请返回 Step 1 勾选「实操任务」，或在侧边栏快捷选择。</div>", unsafe_allow_html=True)
     else:
         level_map = {"L3": "深度实操", "L2": "基础实操", "L1": "无需实操"}
         level_name = level_map.get(st.session_state.hands_on_level, "基础实操")
@@ -1135,7 +1333,7 @@ with st.expander("🔧 Step 4: 生成软件实操任务（条件触发）", expa
         
         col_btn = st.columns([2, 2, 2])[0]
         with col_btn:
-            if st.button("🚀 生成实操任务", use_container_width=True):
+            if st.button("🚀 生成实操任务", use_container_width=True, key="btn_hands_on"):
                 if not st.session_state.api_key:
                     st.error("请先在侧边栏设置 API Key")
                 else:
@@ -1167,21 +1365,24 @@ with st.expander("🔧 Step 4: 生成软件实操任务（条件触发）", expa
             st.markdown(st.session_state.hands_on_tasks)
             
             st.markdown("---")
-            if st.button("✅ 确认并进入下一步", use_container_width=True):
+            if st.button("✅ 确认并进入下一步", use_container_width=True, key="confirm_hands_on"):
                 st.session_state.step_completed[4] = True
                 st.rerun()
 
 # ============================================================
-# Step 5: 生成考核系统
+# Step 5: 生成考核系统（条件显示）
 # ============================================================
-step5_expanded = st.session_state.step_completed[4] and not st.session_state.step_completed[5]
-with st.expander("🎯 Step 5: 生成考核系统", expanded=step5_expanded):
-    if not st.session_state.step_completed[4]:
-        st.info("请先完成 Step 4 实操任务")
+step5_expanded = st.session_state.step_completed[3] and not st.session_state.step_completed[5] and is_module_selected("assessment")
+step5_collapsed = st.session_state.step_completed[5] and is_module_selected("assessment")
+with st.expander("🎯 Step 5: 生成考核系统", expanded=(step5_expanded or step5_collapsed)):
+    if not st.session_state.step_completed[3]:
+        st.info("请先完成 Step 3 培训蓝图")
+    elif not is_module_selected("assessment"):
+        st.markdown("<div class='skip-box'>⛔ 此模块已跳过（未在模块选择中勾选）。如需生成，请返回 Step 1 勾选「考核系统」，或在侧边栏快捷选择。</div>", unsafe_allow_html=True)
     else:
         col_btn = st.columns([2, 2, 2])[0]
         with col_btn:
-            if st.button("🚀 生成考核系统", use_container_width=True):
+            if st.button("🚀 生成考核系统", use_container_width=True, key="btn_assessment"):
                 if not st.session_state.api_key:
                     st.error("请先在侧边栏设置 API Key")
                 else:
@@ -1214,21 +1415,24 @@ with st.expander("🎯 Step 5: 生成考核系统", expanded=step5_expanded):
             st.markdown(st.session_state.assessment)
             
             st.markdown("---")
-            if st.button("✅ 确认并进入下一步", use_container_width=True):
+            if st.button("✅ 确认并进入下一步", use_container_width=True, key="confirm_assessment"):
                 st.session_state.step_completed[5] = True
                 st.rerun()
 
 # ============================================================
-# Step 6: 生成培训素材
+# Step 6: 生成培训素材（条件显示）
 # ============================================================
-step6_expanded = st.session_state.step_completed[5] and not st.session_state.step_completed[6]
-with st.expander("📑 Step 6: 生成培训素材", expanded=step6_expanded):
-    if not st.session_state.step_completed[5]:
-        st.info("请先完成 Step 5 考核系统")
+step6_expanded = st.session_state.step_completed[3] and not st.session_state.step_completed[6] and is_module_selected("materials")
+step6_collapsed = st.session_state.step_completed[6] and is_module_selected("materials")
+with st.expander("📑 Step 6: 生成培训素材", expanded=(step6_expanded or step6_collapsed)):
+    if not st.session_state.step_completed[3]:
+        st.info("请先完成 Step 3 培训蓝图")
+    elif not is_module_selected("materials"):
+        st.markdown("<div class='skip-box'>⛔ 此模块已跳过（未在模块选择中勾选）。如需生成，请返回 Step 1 勾选「培训素材」，或在侧边栏快捷选择。</div>", unsafe_allow_html=True)
     else:
         col_btn = st.columns([2, 2, 2])[0]
         with col_btn:
-            if st.button("🚀 生成培训素材", use_container_width=True):
+            if st.button("🚀 生成培训素材", use_container_width=True, key="btn_materials"):
                 if not st.session_state.api_key:
                     st.error("请先在侧边栏设置 API Key")
                 else:
@@ -1260,21 +1464,24 @@ with st.expander("📑 Step 6: 生成培训素材", expanded=step6_expanded):
             st.markdown(st.session_state.materials)
             
             st.markdown("---")
-            if st.button("✅ 确认并进入下一步", use_container_width=True):
+            if st.button("✅ 确认并进入下一步", use_container_width=True, key="confirm_materials"):
                 st.session_state.step_completed[6] = True
                 st.rerun()
 
 # ============================================================
-# Step 7: 生成学习迁移计划
+# Step 7: 生成学习迁移计划（条件显示）
 # ============================================================
-step7_expanded = st.session_state.step_completed[6] and not st.session_state.step_completed[7]
-with st.expander("🔄 Step 7: 生成学习迁移计划（30天）", expanded=step7_expanded):
-    if not st.session_state.step_completed[6]:
-        st.info("请先完成 Step 6 培训素材")
+step7_expanded = st.session_state.step_completed[3] and not st.session_state.step_completed[7] and is_module_selected("transfer")
+step7_collapsed = st.session_state.step_completed[7] and is_module_selected("transfer")
+with st.expander("🔄 Step 7: 生成学习迁移计划（30天）", expanded=(step7_expanded or step7_collapsed)):
+    if not st.session_state.step_completed[3]:
+        st.info("请先完成 Step 3 培训蓝图")
+    elif not is_module_selected("transfer"):
+        st.markdown("<div class='skip-box'>⛔ 此模块已跳过（未在模块选择中勾选）。如需生成，请返回 Step 1 勾选「学习迁移」，或在侧边栏快捷选择。</div>", unsafe_allow_html=True)
     else:
         col_btn = st.columns([2, 2, 2])[0]
         with col_btn:
-            if st.button("🚀 生成学习迁移计划", use_container_width=True):
+            if st.button("🚀 生成学习迁移计划", use_container_width=True, key="btn_transfer"):
                 if not st.session_state.api_key:
                     st.error("请先在侧边栏设置 API Key")
                 else:
@@ -1303,21 +1510,24 @@ with st.expander("🔄 Step 7: 生成学习迁移计划（30天）", expanded=st
             st.markdown(st.session_state.transfer_plan)
             
             st.markdown("---")
-            if st.button("✅ 确认并进入下一步", use_container_width=True):
+            if st.button("✅ 确认并进入下一步", use_container_width=True, key="confirm_transfer"):
                 st.session_state.step_completed[7] = True
                 st.rerun()
 
 # ============================================================
-# Step 8: 生成效果评估框架
+# Step 8: 生成效果评估框架（条件显示）
 # ============================================================
-step8_expanded = st.session_state.step_completed[7] and not st.session_state.step_completed[8]
-with st.expander("📊 Step 8: 生成效果评估框架（Kirkpatrick四级）", expanded=step8_expanded):
-    if not st.session_state.step_completed[7]:
-        st.info("请先完成 Step 7 学习迁移计划")
+step8_expanded = st.session_state.step_completed[3] and not st.session_state.step_completed[8] and is_module_selected("evaluation")
+step8_collapsed = st.session_state.step_completed[8] and is_module_selected("evaluation")
+with st.expander("📊 Step 8: 生成效果评估框架（Kirkpatrick四级）", expanded=(step8_expanded or step8_collapsed)):
+    if not st.session_state.step_completed[3]:
+        st.info("请先完成 Step 3 培训蓝图")
+    elif not is_module_selected("evaluation"):
+        st.markdown("<div class='skip-box'>⛔ 此模块已跳过（未在模块选择中勾选）。如需生成，请返回 Step 1 勾选「效果评估」，或在侧边栏快捷选择。</div>", unsafe_allow_html=True)
     else:
         col_btn = st.columns([2, 2, 2])[0]
         with col_btn:
-            if st.button("🚀 生成评估框架", use_container_width=True):
+            if st.button("🚀 生成评估框架", use_container_width=True, key="btn_evaluation"):
                 if not st.session_state.api_key:
                     st.error("请先在侧边栏设置 API Key")
                 else:
@@ -1349,82 +1559,73 @@ with st.expander("📊 Step 8: 生成效果评估框架（Kirkpatrick四级）",
             st.markdown(st.session_state.evaluation)
             
             st.markdown("---")
-            if st.button("🎉 完成全部生成！", use_container_width=True):
+            if st.button("🎉 完成全部生成！", use_container_width=True, key="confirm_evaluation"):
                 st.session_state.step_completed[8] = True
                 st.rerun()
 
 # ============================================================
 # 完成页
 # ============================================================
-if st.session_state.step_completed[8]:
+# 判断是否所有选中的模块都已完成
+all_selected_done = all(st.session_state.step_completed[i] for i in selected_steps)
+
+if all_selected_done and len(selected_steps) > 0:
     st.markdown("""
     <div class='completion-container'>
         <div class='completion-emoji'>🎉</div>
         <div class='completion-title'>培训方案生成完成！</div>
-        <div class='completion-subtitle'>所有 9 个步骤已完成，您可以下载完整方案或继续编辑</div>
+        <div class='completion-subtitle'>所有选中的模块已生成，您可以下载完整方案或继续编辑</div>
     </div>
     """, unsafe_allow_html=True)
     
-    # 下载功能
-    full_report = f"""# {st.session_state.product_positioning or '产品'} 认知培训完整方案
-
-**目标岗位**：{st.session_state.target_role}  |  **培训时长**：{st.session_state.training_duration}
-**经验水平**：{st.session_state.experience_level}  |  **先验知识**：{st.session_state.prior_knowledge}  |  **团队规模**：{st.session_state.team_size}
-**产品复杂度**：{st.session_state.complexity}  |  **实操等级**：{st.session_state.hands_on_level}
-
----
-
-# 第一部分：产品理解校验
-
-{st.session_state.product_validation}
-
----
-
-# 第二部分：自适应判断
-
-{st.session_state.adaptive_result}
-
----
-
-# 第三部分：培训蓝图
-
-{st.session_state.blueprint}
-
----
-
-# 第四部分：软件实操任务
-
-{st.session_state.hands_on_tasks}
-
----
-
-# 第五部分：考核系统
-
-{st.session_state.assessment}
-
----
-
-# 第六部分：培训素材
-
-{st.session_state.materials}
-
----
-
-# 第七部分：学习迁移计划（30天）
-
-{st.session_state.transfer_plan}
-
----
-
-# 第八部分：效果评估框架（Kirkpatrick四级）
-
-{st.session_state.evaluation}
-
----
-
-> 本方案由 AI+培训设计器 v3.1 生成
-> 基于 ADDIE + Bloom + Kirkpatrick + 70-20-10 方法论框架
-"""
+    # 构建报告（只包含选中的模块）
+    report_parts = [f"# {st.session_state.product_positioning or '产品'} 认知培训完整方案\n"]
+    report_parts.append(f"**目标岗位**：{st.session_state.target_role}  |  **培训时长**：{st.session_state.training_duration}")
+    report_parts.append(f"**经验水平**：{st.session_state.experience_level}  |  **先验知识**：{st.session_state.prior_knowledge}  |  **团队规模**：{st.session_state.team_size}")
+    report_parts.append(f"**产品复杂度**：{st.session_state.complexity}  |  **实操等级**：{st.session_state.hands_on_level}")
+    report_parts.append("")
+    
+    if is_module_selected("blueprint") and st.session_state.blueprint:
+        report_parts.append("---")
+        report_parts.append("# 第一部分：培训蓝图")
+        report_parts.append("")
+        report_parts.append(st.session_state.blueprint)
+    
+    if is_module_selected("hands_on") and st.session_state.hands_on_tasks:
+        report_parts.append("---")
+        report_parts.append("# 第二部分：软件实操任务")
+        report_parts.append("")
+        report_parts.append(st.session_state.hands_on_tasks)
+    
+    if is_module_selected("assessment") and st.session_state.assessment:
+        report_parts.append("---")
+        report_parts.append("# 第三部分：考核系统")
+        report_parts.append("")
+        report_parts.append(st.session_state.assessment)
+    
+    if is_module_selected("materials") and st.session_state.materials:
+        report_parts.append("---")
+        report_parts.append("# 第四部分：培训素材")
+        report_parts.append("")
+        report_parts.append(st.session_state.materials)
+    
+    if is_module_selected("transfer") and st.session_state.transfer_plan:
+        report_parts.append("---")
+        report_parts.append("# 第五部分：学习迁移计划（30天）")
+        report_parts.append("")
+        report_parts.append(st.session_state.transfer_plan)
+    
+    if is_module_selected("evaluation") and st.session_state.evaluation:
+        report_parts.append("---")
+        report_parts.append("# 第六部分：效果评估框架（Kirkpatrick四级）")
+        report_parts.append("")
+        report_parts.append(st.session_state.evaluation)
+    
+    report_parts.append("---")
+    report_parts.append("> 本方案由 AI+培训设计器 v3.1 生成")
+    report_parts.append("> 基于 ADDIE + Bloom + Kirkpatrick + 70-20-10 方法论框架")
+    
+    full_report = "\n".join(report_parts)
     
     col_dl1, col_dl2 = st.columns(2)
     with col_dl1:

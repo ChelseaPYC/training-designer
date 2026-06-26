@@ -75,6 +75,7 @@ st.markdown("""
     .main .block-container {
         padding: 0 1rem 2rem 1rem;
         max-width: 100%;
+        background: #ffffff;
     }
     
     /* ===== 隐藏 Streamlit 默认元素 ===== */
@@ -85,7 +86,7 @@ st.markdown("""
     
     /* ===== 顶部导航栏 ===== */
     .nav-bar {
-        background: #0a0e1a;
+        background: #ffffff;
         padding: 0.75rem 2rem;
         display: flex;
         justify-content: space-between;
@@ -94,18 +95,18 @@ st.markdown("""
         position: sticky;
         top: 0;
         z-index: 100;
-        border-bottom: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(30, 41, 59, 0.06);
     }
     .nav-brand {
         font-size: 1rem;
-        font-weight: 500;
-        color: white;
+        font-weight: 600;
+        color: #4f46e5;
         letter-spacing: 0.05em;
     }
     .nav-btn {
         background: transparent;
-        border: 1px solid rgba(255,255,255,0.2);
-        color: white;
+        border: 1px solid rgba(79, 70, 229, 0.2);
+        color: #4f46e5;
         padding: 0.4rem 1rem;
         border-radius: 6px;
         font-size: 0.8rem;
@@ -113,19 +114,20 @@ st.markdown("""
         transition: all 0.2s;
     }
     .nav-btn:hover {
-        background: rgba(255,255,255,0.1);
-        border-color: rgba(255,255,255,0.3);
+        background: rgba(79, 70, 229, 0.08);
+        border-color: rgba(79, 70, 229, 0.4);
     }
     
     /* ===== Hero 区域 ===== */
     .hero-section {
-        background: linear-gradient(135deg, #0a0e1a 0%, #121933 50%, #0a0e1a 100%);
+        background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f5f3ff 100%);
         padding: 3rem 2rem 3.5rem 2rem;
-        color: white;
+        color: #1e293b;
         text-align: left;
         position: relative;
         overflow: hidden;
         margin: 0 -1rem;
+        border-bottom: 1px solid rgba(30, 41, 59, 0.04);
     }
     .hero-section::before {
         content: '';
@@ -134,7 +136,7 @@ st.markdown("""
         right: 0;
         width: 50%;
         height: 100%;
-        background: radial-gradient(circle at 80% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+        background: radial-gradient(circle at 80% 50%, rgba(79, 70, 229, 0.08) 0%, transparent 70%);
         pointer-events: none;
     }
     .hero-container {
@@ -161,12 +163,12 @@ st.markdown("""
         font-weight: 700;
         margin-bottom: 1rem;
         line-height: 1.3;
-        color: white;
+        color: #1e293b;
         position: relative;
     }
     .hero-subtitle {
         font-size: 1rem;
-        color: rgba(255,255,255,0.55);
+        color: #64748b;
         font-weight: 400;
         line-height: 1.7;
         max-width: 500px;
@@ -179,7 +181,7 @@ st.markdown("""
         position: relative;
     }
     .hero-btn-primary {
-        background: #1e3a5f;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
         color: white;
         padding: 0.8rem 2rem;
         border-radius: 8px;
@@ -188,49 +190,57 @@ st.markdown("""
         border: none;
         cursor: pointer;
         transition: all 0.2s;
+        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25);
     }
     .hero-btn-primary:hover {
-        background: #2563eb;
+        background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35);
     }
     .hero-btn-secondary {
         background: transparent;
-        color: rgba(255,255,255,0.7);
+        color: #4f46e5;
         padding: 0.8rem 2rem;
         border-radius: 8px;
         font-size: 0.95rem;
         font-weight: 500;
-        border: 1px solid rgba(255,255,255,0.2);
+        border: 1px solid rgba(79, 70, 229, 0.25);
         cursor: pointer;
         transition: all 0.2s;
     }
     .hero-btn-secondary:hover {
-        border-color: rgba(255,255,255,0.4);
-        color: white;
+        border-color: rgba(79, 70, 229, 0.5);
+        background: rgba(79, 70, 229, 0.05);
     }
     
     /* ===== 三步流程 ===== */
     .steps-section {
-        background: #0a0e1a;
+        background: #ffffff;
         padding: 2.5rem 2rem;
         margin: 0 -1rem;
     }
     .steps-title {
         font-size: 1.5rem;
         font-weight: 600;
-        color: white;
+        color: #1e293b;
         margin-bottom: 0.5rem;
     }
     .steps-subtitle {
         font-size: 0.85rem;
-        color: rgba(255,255,255,0.45);
+        color: #64748b;
         margin-bottom: 2rem;
     }
     .step-card {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.06);
+        background: #ffffff;
+        border: 1px solid rgba(30, 41, 59, 0.08);
         border-radius: 12px;
         padding: 1.5rem;
         height: 100%;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        transition: all 0.2s;
+    }
+    .step-card:hover {
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+        border-color: rgba(79, 70, 229, 0.15);
     }
     .step-number {
         display: inline-flex;
@@ -238,8 +248,8 @@ st.markdown("""
         justify-content: center;
         width: 32px;
         height: 32px;
-        background: rgba(59, 130, 246, 0.2);
-        color: #3b82f6;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        color: white;
         border-radius: 8px;
         font-size: 0.85rem;
         font-weight: 600;
@@ -248,12 +258,12 @@ st.markdown("""
     .step-name {
         font-size: 1rem;
         font-weight: 600;
-        color: white;
+        color: #1e293b;
         margin-bottom: 0.5rem;
     }
     .step-desc {
         font-size: 0.8rem;
-        color: rgba(255,255,255,0.45);
+        color: #64748b;
         line-height: 1.6;
     }
     
@@ -292,12 +302,12 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
     .feature-tag.orange {
-        background: #fef3c7;
-        color: #92400e;
+        background: #ede9fe;
+        color: #5b21b6;
     }
     .feature-tag.blue {
-        background: #dbeafe;
-        color: #1e40af;
+        background: #e0e7ff;
+        color: #3730a3;
     }
     .feature-name {
         font-size: 1.1rem;
@@ -321,15 +331,16 @@ st.markdown("""
         overflow: hidden;
     }
     .workspace-section {
-        background: #0a0e1a;
+        background: #f8fafc;
         padding: 2.5rem 2rem;
         margin: 0 -1rem;
         min-height: 600px;
+        border-top: 1px solid rgba(30, 41, 59, 0.04);
     }
     .workspace-title {
         font-size: 1.5rem;
         font-weight: 600;
-        color: white;
+        color: #1e293b;
         margin-bottom: 2rem;
     }
     
@@ -363,7 +374,7 @@ st.markdown("""
         margin-top: 0.25rem;
     }
     .generate-btn {
-        background: #1e293b !important;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
         color: white !important;
         border: none !important;
         border-radius: 10px !important;
@@ -373,30 +384,33 @@ st.markdown("""
         width: 100% !important;
         cursor: pointer !important;
         transition: all 0.2s !important;
+        box-shadow: 0 4px 14px rgba(79, 70, 229, 0.25) !important;
     }
     .generate-btn:hover {
-        background: #334155 !important;
+        background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%) !important;
+        box-shadow: 0 6px 20px rgba(79, 70, 229, 0.35) !important;
     }
     
     /* 右侧预览区 */
     .preview-panel {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.06);
+        background: #ffffff;
+        border: 1px solid rgba(30, 41, 59, 0.08);
         border-radius: 16px;
         padding: 2rem;
         height: 100%;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04);
     }
     .preview-panel-title {
         font-size: 1.1rem;
         font-weight: 600;
-        color: white;
+        color: #1e293b;
         margin-bottom: 1.5rem;
         padding-bottom: 1rem;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
+        border-bottom: 1px solid #f1f5f9;
     }
     .preview-card {
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.06);
+        background: #ffffff;
+        border: 1px solid rgba(30, 41, 59, 0.08);
         border-radius: 10px;
         padding: 1rem 1.25rem;
         margin-bottom: 0.75rem;
@@ -406,11 +420,11 @@ st.markdown("""
         transition: all 0.2s;
     }
     .preview-card:hover {
-        background: rgba(255,255,255,0.06);
+        background: #f8fafc;
     }
     .preview-card.selected {
-        border-color: #3b82f6;
-        background: rgba(59, 130, 246, 0.08);
+        border-color: #4f46e5;
+        background: rgba(79, 70, 229, 0.06);
     }
     .preview-icon {
         font-size: 1.25rem;
@@ -419,7 +433,7 @@ st.markdown("""
         display: flex;
         align-items: center;
         justify-content: center;
-        background: rgba(59, 130, 246, 0.15);
+        background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%);
         border-radius: 8px;
     }
     .preview-info {
@@ -428,12 +442,12 @@ st.markdown("""
     .preview-name {
         font-size: 0.9rem;
         font-weight: 500;
-        color: white;
+        color: #1e293b;
         margin-bottom: 0.2rem;
     }
     .preview-desc {
         font-size: 0.75rem;
-        color: rgba(255,255,255,0.4);
+        color: #64748b;
     }
     
     /* ===== 结果展示区 ===== */
@@ -452,20 +466,20 @@ st.markdown("""
     
     /* ===== 页脚 ===== */
     .footer-section {
-        background: #0a0e1a;
+        background: #ffffff;
         padding: 2.5rem 2rem 2rem 2rem;
         margin: 0 -1rem;
-        border-top: 1px solid rgba(255,255,255,0.05);
+        border-top: 1px solid rgba(30, 41, 59, 0.06);
     }
     .footer-brand {
         font-size: 1.1rem;
         font-weight: 600;
-        color: white;
+        color: #4f46e5;
         margin-bottom: 0.5rem;
     }
     .footer-tagline {
         font-size: 0.8rem;
-        color: rgba(255,255,255,0.4);
+        color: #64748b;
         margin-bottom: 2rem;
     }
     .footer-links {
@@ -476,13 +490,13 @@ st.markdown("""
         flex-wrap: wrap;
     }
     .footer-links a {
-        color: rgba(255,255,255,0.45);
+        color: #64748b;
         font-size: 0.8rem;
         text-decoration: none;
         transition: color 0.2s;
     }
     .footer-links a:hover {
-        color: #3b82f6;
+        color: #4f46e5;
     }
     .footer-column-title {
         display: none;
@@ -493,14 +507,14 @@ st.markdown("""
     .footer-bottom {
         margin-top: 2rem;
         padding-top: 1.5rem;
-        border-top: 1px solid rgba(255,255,255,0.05);
+        border-top: 1px solid rgba(30, 41, 59, 0.06);
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
     .footer-copyright {
         font-size: 0.75rem;
-        color: rgba(255,255,255,0.25);
+        color: #94a3b8;
     }
     
     /* ===== 设置弹窗 ===== */
@@ -532,7 +546,7 @@ st.markdown("""
     }
     .progress-bar {
         height: 100%;
-        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        background: linear-gradient(90deg, #4f46e5, #7c3aed);
         border-radius: 999px;
         transition: width 0.5s ease;
     }
@@ -552,8 +566,8 @@ st.markdown("""
     }
     .stTabs [aria-selected="true"] {
         background: white !important;
-        color: #1e3a5f !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        color: #4f46e5 !important;
+        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.12);
     }
     
     /* ===== 响应式 ===== */
@@ -851,11 +865,11 @@ st.markdown("""
 hero_cols = st.columns([3, 1])
 with hero_cols[0]:
     st.markdown("""
-    <a href="#workspace" style="display:inline-block;background:#1e3a5f;color:white;padding:0.8rem 2rem;border-radius:8px;font-size:0.95rem;font-weight:500;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#1e3a5f'">立即体验</a>
+    <a href="#workspace" style="display:inline-block;background:linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%);color:white;padding:0.8rem 2rem;border-radius:8px;font-size:0.95rem;font-weight:500;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;box-shadow:0 4px 14px rgba(79,70,229,0.25);" onmouseover="this.style.background='linear-gradient(135deg,#4338ca 0%,#6d28d9 100%)';this.style.boxShadow='0 6px 20px rgba(79,70,229,0.35)'" onmouseout="this.style.background='linear-gradient(135deg,#4f46e5 0%,#7c3aed 100%)';this.style.boxShadow='0 4px 14px rgba(79,70,229,0.25)'">立即体验</a>
     """, unsafe_allow_html=True)
 with hero_cols[1]:
     st.markdown("""
-    <a href="#features" style="display:inline-block;background:transparent;color:rgba(255,255,255,0.7);padding:0.8rem 2rem;border-radius:8px;font-size:0.95rem;font-weight:500;text-decoration:none;border:1px solid rgba(255,255,255,0.2);transition:all 0.2s;cursor:pointer;" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)';this.style.color='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.7)'">了解流程</a>
+    <a href="#features" style="display:inline-block;background:transparent;color:#4f46e5;padding:0.8rem 2rem;border-radius:8px;font-size:0.95rem;font-weight:500;text-decoration:none;border:1px solid rgba(79,70,229,0.25);transition:all 0.2s;cursor:pointer;" onmouseover="this.style.borderColor='rgba(79,70,229,0.5)';this.style.background='rgba(79,70,229,0.05)'" onmouseout="this.style.borderColor='rgba(79,70,229,0.25)';this.style.background='transparent'">了解流程</a>
     """, unsafe_allow_html=True)
 
 # 跳转锚点占位
@@ -1044,7 +1058,7 @@ st.markdown("""
 # ============================================================
 if st.session_state.scroll_to_workspace:
     st.markdown("""
-    <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 0.75rem 1rem; margin: 1rem 0; color: #3b82f6; font-size: 0.9rem; text-align: center;">
+    <div style="background: rgba(79, 70, 229, 0.08); border: 1px solid rgba(79, 70, 229, 0.2); border-radius: 8px; padding: 0.75rem 1rem; margin: 1rem 0; color: #4f46e5; font-size: 0.9rem; text-align: center;">
         已跳转到工作区，请填写下方信息开始生成培训方案
     </div>
     <script>
@@ -1065,9 +1079,9 @@ st.markdown("""
 # 检查 API Key
 if not st.session_state.api_key:
     st.markdown("""
-    <div style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.5);">
-        <p style="font-size: 1.1rem; margin-bottom: 1rem;">⚠️ API Key 未配置</p>
-        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.3);">请在 Streamlit Cloud 后台 Settings → Secrets 中配置 DEEPSEEK_API_KEY</p>
+    <div style="text-align: center; padding: 3rem; color: #64748b;">
+        <p style="font-size: 1.1rem; margin-bottom: 1rem; color: #1e293b; font-weight: 600;">⚠️ API Key 未配置</p>
+        <p style="font-size: 0.85rem; color: #64748b;">请在 Streamlit Cloud 后台 Settings → Secrets 中配置 DEEPSEEK_API_KEY</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1084,7 +1098,7 @@ if not st.session_state.api_key:
         </div>
         <div class="footer-bottom">
             <div class="footer-copyright">© 2026 AI培训设计器</div>
-            <div class="footer-copyright">v4.3 | 由 ChelseaPYC 构建</div>
+            <div class="footer-copyright">v4.6 | 由 ChelseaPYC 构建</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1308,9 +1322,9 @@ st.markdown("""
         <a href="#workspace">立即开始</a>
         <a href="https://github.com/ChelseaPYC/training-designer" target="_blank">开源仓库</a>
     </div>
-    <div class="footer-bottom">
-        <div class="footer-copyright">© 2026 AI培训设计器</div>
-        <div class="footer-copyright">v4.3 | 由 ChelseaPYC 构建</div>
+        <div class="footer-bottom">
+            <div class="footer-copyright">© 2026 AI培训设计器</div>
+            <div class="footer-copyright">v4.6 | 由 ChelseaPYC 构建</div>
+        </div>
     </div>
-</div>
 """, unsafe_allow_html=True)

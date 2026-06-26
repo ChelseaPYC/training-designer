@@ -281,10 +281,10 @@ st.markdown("""
         line-height: 1.6;
     }
     
-    /* ===== 功能模块展示 - 紧凑网格 ===== */
+    /* ===== 功能模块展示 - 左右交替布局 ===== */
     .features-section {
-        background: #f8fafc;
-        padding: 2.5rem 2rem;
+        background: white;
+        padding: 4rem 2rem;
         margin: 0 -1rem;
     }
     .features-title {
@@ -298,52 +298,14 @@ st.markdown("""
         color: #6b7280;
         margin-bottom: 2rem;
     }
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.5rem;
-        max-width: 1000px;
-        margin: 0 auto;
-    }
-    .feature-card {
-        background: white;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 1.5rem;
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        transition: all 0.2s;
-    }
-    .feature-card:hover {
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        border-color: #cbd5e1;
-    }
-    .feature-icon-wrap {
-        flex-shrink: 0;
-        width: 48px;
-        height: 48px;
-        border-radius: 10px;
+    .feature-row {
         display: flex;
         align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
+        gap: 3rem;
+        margin-bottom: 3rem;
     }
-    .feature-icon-wrap.blue {
-        background: #eff6ff;
-    }
-    .feature-icon-wrap.orange {
-        background: #fffbeb;
-    }
-    .feature-icon-wrap.green {
-        background: #ecfdf5;
-    }
-    .feature-icon-wrap.purple {
-        background: #faf5ff;
-    }
-    .feature-card-content {
+    .feature-content {
         flex: 1;
-        min-width: 0;
     }
     .feature-tag {
         display: inline-block;
@@ -361,35 +323,26 @@ st.markdown("""
         background: #dbeafe;
         color: #1e40af;
     }
-    .feature-tag.green {
-        background: #d1fae5;
-        color: #065f46;
-    }
-    .feature-tag.purple {
-        background: #f3e8ff;
-        color: #7c3aed;
-    }
     .feature-name {
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 600;
         color: #1e293b;
-        margin-bottom: 0.35rem;
     }
     .feature-desc {
-        font-size: 0.8rem;
+        font-size: 0.85rem;
         color: #6b7280;
-        line-height: 1.5;
     }
-    @media (max-width: 768px) {
-        .features-grid {
-            grid-template-columns: 1fr;
-        }
-        .hero-container {
-            flex-direction: column;
-        }
-        .hero-graphic {
-            display: none;
-        }
+    .feature-preview {
+        flex: 1;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 0;
+        min-height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
     }
     .workspace-section {
         background: #0a0e1a;
@@ -541,18 +494,25 @@ st.markdown("""
     }
     .footer-links {
         display: flex;
-        gap: 4rem;
+        justify-content: center;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+    .footer-links a {
+        color: rgba(255,255,255,0.45);
+        font-size: 0.8rem;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .footer-links a:hover {
+        color: #3b82f6;
     }
     .footer-column-title {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: rgba(255,255,255,0.6);
-        margin-bottom: 1rem;
+        display: none;
     }
     .footer-link {
-        font-size: 0.8rem;
-        color: rgba(255,255,255,0.35);
-        margin-bottom: 0.5rem;
+        display: none;
     }
     .footer-bottom {
         margin-top: 2rem;
@@ -625,6 +585,12 @@ st.markdown("""
         .feature-row {
             flex-direction: column;
             gap: 1rem;
+        }
+        .hero-container {
+            flex-direction: column;
+        }
+        .hero-graphic {
+            display: none;
         }
     }
 </style>
@@ -996,44 +962,142 @@ with col3:
     """, unsafe_allow_html=True)
 
 # ============================================================
-# 功能模块展示 - 紧凑网格
+# 功能模块展示 - 左右交替布局
 # ============================================================
 st.markdown("""
 <div class="features-section">
-    <div class="features-title">覆盖全链路培训需求</div>
-    <div class="features-subtitle">从规划到考核，为您生成体系化的完整培训方案</div>
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon-wrap blue">📋</div>
-            <div class="feature-card-content">
-                <div class="feature-tag blue">智能生成</div>
-                <div class="feature-name">课程大纲自动构建</div>
-                <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配。</div>
-            </div>
+    <div style="text-align:center;margin-bottom:1rem;">
+        <div class="features-title">覆盖全链路培训需求</div>
+        <div class="features-subtitle">从规划到考核，为您生成体系化的完整培训方案</div>
+    </div>
+
+    <!-- Row 1: 课程大纲自动构建 - 文字左，SVG右 -->
+    <div class="feature-row">
+        <div class="feature-content">
+            <div class="feature-tag blue">智能生成</div>
+            <div class="feature-name">课程大纲自动构建</div>
+            <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配。</div>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon-wrap orange">📑</div>
-            <div class="feature-card-content">
-                <div class="feature-tag orange">一键输出</div>
-                <div class="feature-name">培训 PPT 即开即用</div>
-                <div class="feature-desc">自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结。</div>
-            </div>
+        <div class="feature-preview">
+            <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="fs1"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/></filter>
+                </defs>
+                <rect x="10" y="8" width="260" height="164" rx="12" fill="white" filter="url(#fs1)"/>
+                <rect x="10" y="8" width="260" height="6" rx="3" fill="#1e3a5f"/>
+                <circle cx="32" cy="38" r="5" fill="#3b82f6"/>
+                <rect x="44" y="34" width="150" height="7" rx="3.5" fill="#1e293b"/>
+                <rect x="44" y="45" width="100" height="4" rx="2" fill="#94a3b8"/>
+                <circle cx="32" cy="65" r="5" fill="#3b82f6"/>
+                <rect x="44" y="61" width="180" height="7" rx="3.5" fill="#374151"/>
+                <rect x="44" y="72" width="120" height="4" rx="2" fill="#94a3b8"/>
+                <circle cx="32" cy="92" r="5" fill="#3b82f6"/>
+                <rect x="44" y="88" width="160" height="7" rx="3.5" fill="#374151"/>
+                <rect x="44" y="99" width="90" height="4" rx="2" fill="#94a3b8"/>
+                <rect x="28" y="125" width="224" height="10" rx="5" fill="#f1f5f9"/>
+                <rect x="28" y="125" width="150" height="10" rx="5" fill="#3b82f6"/>
+                <text x="190" y="153" font-size="9" fill="#64748b" text-anchor="middle" font-family="system-ui,sans-serif">模块完成 65%</text>
+            </svg>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon-wrap green">🎯</div>
-            <div class="feature-card-content">
-                <div class="feature-tag green">多维度</div>
-                <div class="feature-name">智能考核与评估</div>
-                <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助评估培训效果。</div>
-            </div>
+    </div>
+
+    <!-- Row 2: 培训 PPT 即开即用 - SVG左，文字右 -->
+    <div class="feature-row">
+        <div class="feature-preview">
+            <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="fs2"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.1"/></filter>
+                </defs>
+                <rect x="20" y="20" width="245" height="140" rx="9" fill="#fef3c7" stroke="#fcd34d" stroke-width="1" transform="rotate(-3,142,90)"/>
+                <rect x="15" y="15" width="245" height="140" rx="9" fill="white" filter="url(#fs2)"/>
+                <rect x="15" y="15" width="245" height="32" rx="9" fill="#fef3c7"/>
+                <rect x="15" y="37" width="245" height="10" fill="#fef3c7"/>
+                <rect x="28" y="23" width="130" height="7" rx="3.5" fill="#f59e0b"/>
+                <circle cx="36" cy="60" r="4" fill="#e5e7eb"/>
+                <rect x="47" y="57" width="140" height="5" rx="2.5" fill="#4b5563"/>
+                <circle cx="36" cy="76" r="4" fill="#e5e7eb"/>
+                <rect x="47" y="73" width="155" height="5" rx="2.5" fill="#4b5563"/>
+                <rect x="47" y="82" width="100" height="3" rx="1.5" fill="#9ca3af"/>
+                <circle cx="36" cy="96" r="4" fill="#f59e0b"/>
+                <rect x="47" y="93" width="125" height="5" rx="2.5" fill="#f59e0b"/>
+                <rect x="160" y="125" width="90" height="7" rx="3.5" fill="#e5e7eb"/>
+            </svg>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon-wrap purple">🔧</div>
-            <div class="feature-card-content">
-                <div class="feature-tag purple">实战导向</div>
-                <div class="feature-name">实操场景化练习</div>
-                <div class="feature-desc">根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中掌握核心功能。</div>
-            </div>
+        <div class="feature-content">
+            <div class="feature-tag orange">一键输出</div>
+            <div class="feature-name">培训 PPT 即开即用</div>
+            <div class="feature-desc">自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结。</div>
+        </div>
+    </div>
+
+    <!-- Row 3: 智能考核与评估 - 文字左，SVG右 -->
+    <div class="feature-row">
+        <div class="feature-content">
+            <div class="feature-tag blue">多维度</div>
+            <div class="feature-name">智能考核与评估</div>
+            <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助评估培训效果。</div>
+        </div>
+        <div class="feature-preview">
+            <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="fs3"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/></filter>
+                </defs>
+                <rect x="10" y="8" width="260" height="164" rx="12" fill="white" filter="url(#fs3)"/>
+                <circle cx="28" cy="28" r="14" fill="#fef2f2" stroke="#fecaca" stroke-width="1"/>
+                <text x="28" y="33" font-size="12" font-weight="bold" fill="#ef4444" text-anchor="middle" font-family="system-ui,sans-serif">?</text>
+                <rect x="50" y="22" width="170" height="6" rx="3" fill="#374151"/>
+                <rect x="50" y="33" width="110" height="6" rx="3" fill="#4b5563"/>
+                <circle cx="36" cy="60" r="6" fill="white" stroke="#d1d5db" stroke-width="1.5"/>
+                <rect x="50" y="57" width="150" height="5" rx="2.5" fill="#6b7280"/>
+                <circle cx="36" cy="78" r="6" fill="white" stroke="#d1d5db" stroke-width="1.5"/>
+                <rect x="50" y="75" width="165" height="5" rx="2.5" fill="#6b7280"/>
+                <circle cx="36" cy="96" r="6" fill="#ef4444" stroke="#ef4444" stroke-width="1.5"/>
+                <circle cx="36" cy="96" r="3" fill="white"/>
+                <rect x="50" y="93" width="130" height="5" rx="2.5" fill="#ef4444"/>
+                <circle cx="36" cy="114" r="6" fill="white" stroke="#d1d5db" stroke-width="1.5"/>
+                <rect x="50" y="111" width="110" height="5" rx="2.5" fill="#6b7280"/>
+                <rect x="190" y="130" width="58" height="24" rx="12" fill="#ef4444" opacity="0.85"/>
+                <text x="219" y="146" font-size="11" font-weight="600" fill="white" text-anchor="middle" font-family="system-ui,sans-serif">4 / 4</text>
+                <rect x="28" y="152" width="224" height="5" rx="2.5" fill="#f1f5f9"/>
+                <rect x="28" y="152" width="224" height="5" rx="2.5" fill="#22c55e"/>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Row 4: 实操场景化练习 - SVG左，文字右 -->
+    <div class="feature-row">
+        <div class="feature-preview">
+            <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <filter id="fs4"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.08"/></filter>
+                </defs>
+                <rect x="10" y="8" width="260" height="164" rx="12" fill="white" filter="url(#fs4)"/>
+                <circle cx="236" cy="28" r="18" fill="#ecfdf5" stroke="#bbf7d0" stroke-width="1.5"/>
+                <circle cx="236" cy="28" r="11" fill="white" stroke="#86efac" stroke-width="1"/>
+                <circle cx="236" cy="28" r="5" fill="#22c55e"/>
+                <line x1="236" y1="10" x2="236" y2="46" stroke="#22c55e" stroke-width="0.8" opacity="0.3"/>
+                <line x1="218" y1="28" x2="254" y2="28" stroke="#22c55e" stroke-width="0.8" opacity="0.3"/>
+                <rect x="28" y="26" width="18" height="18" rx="4" fill="#22c55e"/>
+                <polyline points="34,33 37,36 40,32" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="56" y="28" width="120" height="6" rx="3" fill="#374151"/>
+                <rect x="56" y="38" width="70" height="4" rx="2" fill="#94a3b8"/>
+                <rect x="28" y="58" width="18" height="18" rx="4" fill="#22c55e"/>
+                <polyline points="34,65 37,68 40,64" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="56" y="60" width="140" height="6" rx="3" fill="#374151"/>
+                <rect x="56" y="70" width="90" height="4" rx="2" fill="#94a3b8"/>
+                <rect x="28" y="90" width="18" height="18" rx="4" fill="#22c55e"/>
+                <polyline points="34,97 37,100 40,96" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="56" y="92" width="115" height="6" rx="3" fill="#374151"/>
+                <rect x="56" y="102" width="80" height="4" rx="2" fill="#94a3b8"/>
+                <rect x="28" y="122" width="18" height="18" rx="4" fill="white" stroke="#d1d5db" stroke-width="1.5"/>
+                <rect x="56" y="124" width="145" height="6" rx="3" fill="#d1d5db"/>
+                <rect x="56" y="134" width="95" height="4" rx="2" fill="#e5e7eb"/>
+            </svg>
+        </div>
+        <div class="feature-content">
+            <div class="feature-tag orange">实战导向</div>
+            <div class="feature-name">实操场景化练习</div>
+            <div class="feature-desc">根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中掌握核心功能。</div>
         </div>
     </div>
 </div>
@@ -1071,28 +1135,14 @@ if not st.session_state.api_key:
         <div class="footer-brand">🎓 AI培训设计器</div>
         <div class="footer-tagline">让每一位产品培训师精准有方</div>
         <div class="footer-links">
-            <div>
-                <div class="footer-column-title">产品</div>
-                <div class="footer-link">功能介绍</div>
-                <div class="footer-link">定价方案</div>
-                <div class="footer-link">更新日志</div>
-            </div>
-            <div>
-                <div class="footer-column-title">解决方案</div>
-                <div class="footer-link">企业培训</div>
-                <div class="footer-link">合作伙伴赋能</div>
-                <div class="footer-link">新员工入职</div>
-            </div>
-            <div>
-                <div class="footer-column-title">资源</div>
-                <div class="footer-link">帮助中心</div>
-                <div class="footer-link">API 文档</div>
-                <div class="footer-link">联系我们</div>
-            </div>
+            <a href="#top">回到顶部</a>
+            <a href="#features">功能介绍</a>
+            <a href="#workspace">立即开始</a>
+            <a href="https://github.com/ChelseaPYC/training-designer" target="_blank">开源仓库</a>
         </div>
         <div class="footer-bottom">
-            <div class="footer-copyright">© 2026 AI培训设计器. All rights reserved.</div>
-            <div class="footer-copyright">隐私政策 | 服务条款</div>
+            <div class="footer-copyright">© 2026 AI培训设计器</div>
+            <div class="footer-copyright">v4.3 | 由 ChelseaPYC 构建</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1309,28 +1359,14 @@ st.markdown("""
     <div class="footer-brand">🎓 AI培训设计器</div>
     <div class="footer-tagline">让每一位产品培训师精准有方</div>
     <div class="footer-links">
-        <div>
-            <div class="footer-column-title">产品</div>
-            <div class="footer-link">功能介绍</div>
-            <div class="footer-link">定价方案</div>
-            <div class="footer-link">更新日志</div>
-        </div>
-        <div>
-            <div class="footer-column-title">解决方案</div>
-            <div class="footer-link">企业培训</div>
-            <div class="footer-link">合作伙伴赋能</div>
-            <div class="footer-link">新员工入职</div>
-        </div>
-        <div>
-            <div class="footer-column-title">资源</div>
-            <div class="footer-link">帮助中心</div>
-            <div class="footer-link">API 文档</div>
-            <div class="footer-link">联系我们</div>
-        </div>
+        <a href="#top">回到顶部</a>
+        <a href="#features">功能介绍</a>
+        <a href="#workspace">立即开始</a>
+        <a href="https://github.com/ChelseaPYC/training-designer" target="_blank">开源仓库</a>
     </div>
     <div class="footer-bottom">
-        <div class="footer-copyright">© 2026 AI培训设计器. All rights reserved.</div>
-        <div class="footer-copyright">隐私政策 | 服务条款</div>
+        <div class="footer-copyright">© 2026 AI培训设计器</div>
+        <div class="footer-copyright">v4.3 | 由 ChelseaPYC 构建</div>
     </div>
 </div>
 """, unsafe_allow_html=True)

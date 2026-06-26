@@ -117,7 +117,7 @@ st.markdown("""
     /* ===== Hero 区域 ===== */
     .hero-section {
         background: linear-gradient(135deg, #0a0e1a 0%, #121933 50%, #0a0e1a 100%);
-        padding: 4rem 2rem 5rem 2rem;
+        padding: 3rem 2rem 3.5rem 2rem;
         color: white;
         text-align: left;
         position: relative;
@@ -134,8 +134,27 @@ st.markdown("""
         background: radial-gradient(circle at 80% 50%, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
         pointer-events: none;
     }
+    .hero-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1200px;
+        margin: 0 auto;
+        position: relative;
+        gap: 3rem;
+    }
+    .hero-content {
+        flex: 1;
+        min-width: 0;
+    }
+    .hero-graphic {
+        flex: 0 0 320px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     .hero-title {
-        font-size: 2.8rem;
+        font-size: 2.4rem;
         font-weight: 700;
         margin-bottom: 1rem;
         line-height: 1.3;
@@ -143,15 +162,15 @@ st.markdown("""
         position: relative;
     }
     .hero-subtitle {
-        font-size: 1.05rem;
+        font-size: 1rem;
         color: rgba(255,255,255,0.55);
         font-weight: 400;
-        line-height: 1.8;
-        max-width: 600px;
+        line-height: 1.7;
+        max-width: 500px;
         position: relative;
     }
     .hero-buttons {
-        margin-top: 2rem;
+        margin-top: 1.5rem;
         display: flex;
         gap: 1rem;
         position: relative;
@@ -186,10 +205,37 @@ st.markdown("""
         color: white;
     }
     
+    /* ===== Hero 区域 Streamlit 按钮覆盖 ===== */
+    .hero-section + div .stButton > button[kind="primary"] {
+        background: #1e3a5f !important;
+        color: white !important;
+        border: none !important;
+        padding: 0.8rem 2rem !important;
+        border-radius: 8px !important;
+        font-size: 0.95rem !important;
+        font-weight: 500 !important;
+    }
+    .hero-section + div .stButton > button[kind="primary"]:hover {
+        background: #2563eb !important;
+    }
+    .hero-section + div .stButton > button[kind="secondary"] {
+        background: transparent !important;
+        color: rgba(255,255,255,0.7) !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        padding: 0.8rem 2rem !important;
+        border-radius: 8px !important;
+        font-size: 0.95rem !important;
+        font-weight: 500 !important;
+    }
+    .hero-section + div .stButton > button[kind="secondary"]:hover {
+        border-color: rgba(255,255,255,0.4) !important;
+        color: white !important;
+    }
+    
     /* ===== 三步流程 ===== */
     .steps-section {
         background: #0a0e1a;
-        padding: 3rem 2rem;
+        padding: 2.5rem 2rem;
         margin: 0 -1rem;
     }
     .steps-title {
@@ -235,14 +281,14 @@ st.markdown("""
         line-height: 1.6;
     }
     
-    /* ===== 功能模块展示 ===== */
+    /* ===== 功能模块展示 - 紧凑网格 ===== */
     .features-section {
-        background: white;
-        padding: 4rem 2rem;
+        background: #f8fafc;
+        padding: 2.5rem 2rem;
         margin: 0 -1rem;
     }
     .features-title {
-        font-size: 1.5rem;
+        font-size: 1.4rem;
         font-weight: 600;
         color: #1e293b;
         margin-bottom: 0.5rem;
@@ -250,16 +296,54 @@ st.markdown("""
     .features-subtitle {
         font-size: 0.85rem;
         color: #6b7280;
-        margin-bottom: 2.5rem;
+        margin-bottom: 2rem;
     }
-    .feature-row {
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .feature-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+        transition: all 0.2s;
+    }
+    .feature-card:hover {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        border-color: #cbd5e1;
+    }
+    .feature-icon-wrap {
+        flex-shrink: 0;
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
-        gap: 3rem;
-        margin-bottom: 3rem;
+        justify-content: center;
+        font-size: 1.5rem;
     }
-    .feature-content {
+    .feature-icon-wrap.blue {
+        background: #eff6ff;
+    }
+    .feature-icon-wrap.orange {
+        background: #fffbeb;
+    }
+    .feature-icon-wrap.green {
+        background: #ecfdf5;
+    }
+    .feature-icon-wrap.purple {
+        background: #faf5ff;
+    }
+    .feature-card-content {
         flex: 1;
+        min-width: 0;
     }
     .feature-tag {
         display: inline-block;
@@ -267,7 +351,7 @@ st.markdown("""
         border-radius: 4px;
         font-size: 0.7rem;
         font-weight: 600;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem;
     }
     .feature-tag.orange {
         background: #fef3c7;
@@ -277,35 +361,39 @@ st.markdown("""
         background: #dbeafe;
         color: #1e40af;
     }
+    .feature-tag.green {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    .feature-tag.purple {
+        background: #f3e8ff;
+        color: #7c3aed;
+    }
     .feature-name {
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 600;
         color: #1e293b;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0.35rem;
     }
     .feature-desc {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
         color: #6b7280;
-        line-height: 1.6;
+        line-height: 1.5;
     }
-    .feature-preview {
-        flex: 1;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 2rem;
-        min-height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #94a3b8;
-        font-size: 0.85rem;
+    @media (max-width: 768px) {
+        .features-grid {
+            grid-template-columns: 1fr;
+        }
+        .hero-container {
+            flex-direction: column;
+        }
+        .hero-graphic {
+            display: none;
+        }
     }
-    
-    /* ===== 生成工作区（左右分栏） ===== */
     .workspace-section {
         background: #0a0e1a;
-        padding: 3rem 2rem;
+        padding: 2.5rem 2rem;
         margin: 0 -1rem;
         min-height: 600px;
     }
@@ -436,7 +524,7 @@ st.markdown("""
     /* ===== 页脚 ===== */
     .footer-section {
         background: #0a0e1a;
-        padding: 3rem 2rem 2rem 2rem;
+        padding: 2.5rem 2rem 2rem 2rem;
         margin: 0 -1rem;
         border-top: 1px solid rgba(255,255,255,0.05);
     }
@@ -757,6 +845,8 @@ if "is_generating" not in st.session_state:
     st.session_state.is_generating = False
 if "show_workspace" not in st.session_state:
     st.session_state.show_workspace = False
+if "scroll_to_workspace" not in st.session_state:
+    st.session_state.scroll_to_workspace = False
 
 # ============================================================
 # 顶部导航栏
@@ -809,18 +899,65 @@ if st.session_state.show_settings:
         st.markdown("---")
 
 # ============================================================
-# Hero 区域
+# Hero 区域 - 配图 + 跳转按钮
 # ============================================================
 st.markdown("""
 <div class="hero-section">
-    <div class="hero-title">从产品到培训，<br>一步到位</div>
-    <div class="hero-subtitle">只需输入产品信息，描述核心功能与场景，即可自动生成全套培训方案，从蓝图到1V1点评，让产品培训事半功倍。</div>
-    <div class="hero-buttons">
-        <button class="hero-btn-primary" onclick="document.getElementById('workspace').scrollIntoView({behavior: 'smooth'})">立即体验</button>
-        <button class="hero-btn-secondary">了解流程</button>
+    <div class="hero-container">
+        <div class="hero-content">
+            <div class="hero-title">从产品到培训，<br>一步到位</div>
+            <div class="hero-subtitle">只需输入产品信息，描述核心功能与场景，即可自动生成全套培训方案，从蓝图到1V1点评，让产品培训事半功倍。</div>
+        </div>
+        <div class="hero-graphic">
+            <svg viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;">
+                <defs>
+                    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#1e3a5f;stop-opacity:0.4"/>
+                        <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:0.1"/>
+                    </linearGradient>
+                    <linearGradient id="card-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#1e293b;stop-opacity:0.8"/>
+                        <stop offset="100%" style="stop-color:#0f172a;stop-opacity:0.9"/>
+                    </linearGradient>
+                </defs>
+                <rect width="320" height="240" rx="16" fill="url(#bg-grad)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+                <rect x="20" y="20" width="130" height="90" rx="10" fill="url(#card-grad)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <circle cx="45" cy="45" r="8" fill="#3b82f6" opacity="0.8"/>
+                <rect x="60" y="40" width="75" height="6" rx="3" fill="rgba(255,255,255,0.2)"/>
+                <rect x="60" y="52" width="55" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="35" y="70" width="90" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+                <rect x="35" y="80" width="70" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+                <rect x="20" y="130" width="130" height="90" rx="10" fill="url(#card-grad)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <rect x="35" y="150" width="100" height="40" rx="6" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.3)" stroke-width="1" stroke-dasharray="4,4"/>
+                <text x="85" y="175" font-size="12" fill="#3b82f6" text-anchor="middle" font-family="sans-serif">AI 生成中...</text>
+                <rect x="170" y="20" width="130" height="130" rx="10" fill="url(#card-grad)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <circle cx="210" cy="55" r="12" fill="#f59e0b" opacity="0.7"/>
+                <rect x="230" y="48" width="55" height="5" rx="2.5" fill="rgba(255,255,255,0.2)"/>
+                <rect x="230" y="58" width="40" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="185" y="85" width="100" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+                <rect x="185" y="95" width="80" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+                <rect x="185" y="105" width="90" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
+                <rect x="170" y="170" width="130" height="50" rx="10" fill="url(#card-grad)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+                <rect x="185" y="185" width="100" height="8" rx="4" fill="rgba(34,197,94,0.3)"/>
+                <rect x="185" y="185" width="70" height="8" rx="4" fill="rgba(34,197,94,0.6)"/>
+                <text x="260" y="205" font-size="10" fill="rgba(255,255,255,0.4)" text-anchor="middle" font-family="sans-serif">75% 完成</text>
+            </svg>
+        </div>
     </div>
 </div>
 """, unsafe_allow_html=True)
+
+# 立即体验按钮 - 点击后滚动到工作区
+hero_cols = st.columns([3, 1])
+with hero_cols[0]:
+    if st.button("立即体验", key="hero_cta", type="primary", use_container_width=False):
+        st.session_state.scroll_to_workspace = True
+        st.rerun()
+with hero_cols[1]:
+    st.button("了解流程", key="hero_secondary", type="secondary", use_container_width=False, disabled=True)
+
+# 跳转锚点占位
+st.markdown("<div id='workspace-anchor'></div>", unsafe_allow_html=True)
 
 # ============================================================
 # 三步流程
@@ -859,59 +996,45 @@ with col3:
     """, unsafe_allow_html=True)
 
 # ============================================================
-# 功能模块展示
+# 功能模块展示 - 紧凑网格
 # ============================================================
 st.markdown("""
 <div class="features-section">
     <div class="features-title">覆盖全链路培训需求</div>
     <div class="features-subtitle">从规划到考核，为您生成体系化的完整培训方案</div>
-</div>
-""", unsafe_allow_html=True)
-
-# 课程大纲自动构建
-st.markdown("""
-<div class="feature-row">
-    <div class="feature-content">
-        <div class="feature-tag orange">智能生成</div>
-        <div class="feature-name">课程大纲自动构建</div>
-        <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配，确保培训逻辑清晰、循序渐进。</div>
-    </div>
-    <div class="feature-preview">课程大纲预览</div>
-</div>
-""", unsafe_allow_html=True)
-
-# 培训PPT
-st.markdown("""
-<div class="feature-row">
-    <div class="feature-preview">PPT 课件预览</div>
-    <div class="feature-content">
-        <div class="feature-tag blue">一键输出</div>
-        <div class="feature-name">培训 PPT 即开即用</div>
-        <div class="feature-desc">自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结，直接应用于培训场景无需二次调整。</div>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
-# 智能考核
-st.markdown("""
-<div class="feature-row">
-    <div class="feature-content">
-        <div class="feature-tag orange">多维度</div>
-        <div class="feature-name">智能考核与评估</div>
-        <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助评估培训效果并及时发现薄弱环节进行针对性强化。</div>
-    </div>
-    <div class="feature-preview">考核评估预览</div>
-</div>
-""", unsafe_allow_html=True)
-
-# 实操练习
-st.markdown("""
-<div class="feature-row">
-    <div class="feature-preview">练习手册预览</div>
-    <div class="feature-content">
-        <div class="feature-tag blue">实战导向</div>
-        <div class="feature-name">实操场景化练习</div>
-        <div class="feature-desc">根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中掌握核心功能，提升培训转化率和实际应用能力。</div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon-wrap blue">📋</div>
+            <div class="feature-card-content">
+                <div class="feature-tag blue">智能生成</div>
+                <div class="feature-name">课程大纲自动构建</div>
+                <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配。</div>
+            </div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon-wrap orange">📑</div>
+            <div class="feature-card-content">
+                <div class="feature-tag orange">一键输出</div>
+                <div class="feature-name">培训 PPT 即开即用</div>
+                <div class="feature-desc">自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结。</div>
+            </div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon-wrap green">🎯</div>
+            <div class="feature-card-content">
+                <div class="feature-tag green">多维度</div>
+                <div class="feature-name">智能考核与评估</div>
+                <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助评估培训效果。</div>
+            </div>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon-wrap purple">🔧</div>
+            <div class="feature-card-content">
+                <div class="feature-tag purple">实战导向</div>
+                <div class="feature-name">实操场景化练习</div>
+                <div class="feature-desc">根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中掌握核心功能。</div>
+            </div>
+        </div>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -919,6 +1042,14 @@ st.markdown("""
 # ============================================================
 # 生成工作区（左右分栏）
 # ============================================================
+if st.session_state.scroll_to_workspace:
+    st.markdown("""
+    <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 0.75rem 1rem; margin: 1rem 0; color: #3b82f6; font-size: 0.9rem; text-align: center;">
+        已跳转到工作区，请填写下方信息开始生成培训方案
+    </div>
+    """, unsafe_allow_html=True)
+    st.session_state.scroll_to_workspace = False
+
 st.markdown("""
 <div class="workspace-section" id="workspace">
     <div class="workspace-title">开始生成您的培训方案</div>

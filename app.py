@@ -4,9 +4,12 @@ import json
 import time
 
 # ============================================================
-# 配置区：默认 API Key（可选，填入后用户无需手动设置）
+# 配置区：默认 API Key（通过 Streamlit Secrets 配置，用户无需手动设置）
 # ============================================================
-DEFAULT_API_KEY = ""  # 用户使用时手动输入，不要硬编码到代码中
+# 在 Streamlit Cloud 后台 Settings -> Secrets 中配置：
+# DEEPSEEK_API_KEY = "sk-你的APIKey"
+# 本地开发时可在 .streamlit/secrets.toml 中配置（已加入 .gitignore，不会上传）
+DEFAULT_API_KEY = st.secrets.get("DEEPSEEK_API_KEY", "")
 
 # ============================================================
 # 页面配置
@@ -203,33 +206,6 @@ st.markdown("""
     .hero-btn-secondary:hover {
         border-color: rgba(255,255,255,0.4);
         color: white;
-    }
-    
-    /* ===== Hero 区域 Streamlit 按钮覆盖 ===== */
-    .hero-section + div .stButton > button[kind="primary"] {
-        background: #1e3a5f !important;
-        color: white !important;
-        border: none !important;
-        padding: 0.8rem 2rem !important;
-        border-radius: 8px !important;
-        font-size: 0.95rem !important;
-        font-weight: 500 !important;
-    }
-    .hero-section + div .stButton > button[kind="primary"]:hover {
-        background: #2563eb !important;
-    }
-    .hero-section + div .stButton > button[kind="secondary"] {
-        background: transparent !important;
-        color: rgba(255,255,255,0.7) !important;
-        border: 1px solid rgba(255,255,255,0.2) !important;
-        padding: 0.8rem 2rem !important;
-        border-radius: 8px !important;
-        font-size: 0.95rem !important;
-        font-weight: 500 !important;
-    }
-    .hero-section + div .stButton > button[kind="secondary"]:hover {
-        border-color: rgba(255,255,255,0.4) !important;
-        color: white !important;
     }
     
     /* ===== 三步流程 ===== */
@@ -817,52 +793,10 @@ if "scroll_to_workspace" not in st.session_state:
 # ============================================================
 # 顶部导航栏
 # ============================================================
+st.markdown('<div id="top" style="position: absolute; top: 0; left: 0; width: 0; height: 0;"></div>', unsafe_allow_html=True)
 nav_cols = st.columns([6, 1])
 with nav_cols[0]:
     st.markdown('<div class="nav-brand">企业培训智能化平台</div>', unsafe_allow_html=True)
-with nav_cols[1]:
-    api_status = "✅" if st.session_state.api_key else "⚠️"
-    if st.button(f"⚙️ 设置", key="settings_toggle", help="API Key 设置"):
-        st.session_state.show_settings = not st.session_state.show_settings
-        st.rerun()
-
-# 设置面板（条件显示）
-if st.session_state.show_settings:
-    with st.container():
-        st.markdown("---")
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
-            st.markdown("""
-            <div style="background: white; border-radius: 16px; padding: 2rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2);">
-                <h3 style="margin-bottom: 0.5rem;">⚙️ API Key 设置</h3>
-                <p style="color: #6b7280; font-size: 0.875rem; margin-bottom: 1.5rem;">设置后无需重复输入，当前会话内有效</p>
-            </div>
-            """, unsafe_allow_html=True)
-            
-            api_key_input = st.text_input(
-                "DeepSeek API Key",
-                type="password",
-                value=st.session_state.api_key,
-                placeholder="sk-...",
-                label_visibility="collapsed"
-            )
-            
-            col_save, col_cancel = st.columns(2)
-            with col_save:
-                if st.button("💾 保存", use_container_width=True, type="primary"):
-                    if api_key_input:
-                        st.session_state.api_key = api_key_input
-                        st.session_state.show_settings = False
-                        st.success("✅ 已保存")
-                        time.sleep(0.5)
-                        st.rerun()
-                    else:
-                        st.error("请输入 API Key")
-            with col_cancel:
-                if st.button("取消", use_container_width=True):
-                    st.session_state.show_settings = False
-                    st.rerun()
-        st.markdown("---")
 
 # ============================================================
 # Hero 区域 - 配图 + 跳转按钮
@@ -916,11 +850,13 @@ st.markdown("""
 # 立即体验按钮 - 点击后滚动到工作区
 hero_cols = st.columns([3, 1])
 with hero_cols[0]:
-    if st.button("立即体验", key="hero_cta", type="primary", use_container_width=False):
-        st.session_state.scroll_to_workspace = True
-        st.rerun()
+    st.markdown("""
+    <a href="#workspace" style="display:inline-block;background:#1e3a5f;color:white;padding:0.8rem 2rem;border-radius:8px;font-size:0.95rem;font-weight:500;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer;" onmouseover="this.style.background='#2563eb'" onmouseout="this.style.background='#1e3a5f'">立即体验</a>
+    """, unsafe_allow_html=True)
 with hero_cols[1]:
-    st.button("了解流程", key="hero_secondary", type="secondary", use_container_width=False, disabled=True)
+    st.markdown("""
+    <a href="#features" style="display:inline-block;background:transparent;color:rgba(255,255,255,0.7);padding:0.8rem 2rem;border-radius:8px;font-size:0.95rem;font-weight:500;text-decoration:none;border:1px solid rgba(255,255,255,0.2);transition:all 0.2s;cursor:pointer;" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)';this.style.color='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.2)';this.style.color='rgba(255,255,255,0.7)'">了解流程</a>
+    """, unsafe_allow_html=True)
 
 # 跳转锚点占位
 st.markdown("<div id='workspace-anchor'></div>", unsafe_allow_html=True)
@@ -965,7 +901,7 @@ with col3:
 # 功能模块展示 - 左右交替布局
 # ============================================================
 st.markdown("""
-<div class="features-section">
+<div class="features-section" id="features">
     <div style="text-align:center;margin-bottom:1rem;">
         <div class="features-title">覆盖全链路培训需求</div>
         <div class="features-subtitle">从规划到考核，为您生成体系化的完整培训方案</div>
@@ -1111,6 +1047,12 @@ if st.session_state.scroll_to_workspace:
     <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.3); border-radius: 8px; padding: 0.75rem 1rem; margin: 1rem 0; color: #3b82f6; font-size: 0.9rem; text-align: center;">
         已跳转到工作区，请填写下方信息开始生成培训方案
     </div>
+    <script>
+        setTimeout(function() {
+            var el = document.getElementById('workspace');
+            if (el) el.scrollIntoView({behavior: 'smooth', block: 'start'});
+        }, 200);
+    </script>
     """, unsafe_allow_html=True)
     st.session_state.scroll_to_workspace = False
 
@@ -1124,8 +1066,8 @@ st.markdown("""
 if not st.session_state.api_key:
     st.markdown("""
     <div style="text-align: center; padding: 3rem; color: rgba(255,255,255,0.5);">
-        <p style="font-size: 1.1rem; margin-bottom: 1rem;">⚠️ 请先点击右上角「⚙️ 设置」配置 DeepSeek API Key</p>
-        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.3);">设置一次后，当前会话内无需重复输入</p>
+        <p style="font-size: 1.1rem; margin-bottom: 1rem;">⚠️ API Key 未配置</p>
+        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.3);">请在 Streamlit Cloud 后台 Settings → Secrets 中配置 DEEPSEEK_API_KEY</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -1341,8 +1283,10 @@ if st.session_state.generation_complete:
         for i, (tab, module) in enumerate(zip(tabs, modules_with_content)):
             with tab:
                 content = st.session_state.generated_content[module]
-                st.markdown(f"<div class='result-card'>{content}</div>", unsafe_allow_html=True)
-                
+                st.markdown("<div class='result-card'>", unsafe_allow_html=True)
+                st.markdown(content)
+                st.markdown("</div>", unsafe_allow_html=True)
+
                 st.download_button(
                     label=f"📥 下载 {MODULE_LABELS[module]}",
                     data=content,

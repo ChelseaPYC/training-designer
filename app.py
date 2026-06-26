@@ -904,7 +904,7 @@ with nav_cols[0]:
 # ============================================================
 # Hero 区域 - 配图 + 跳转按钮
 # ============================================================
-st.markdown("""
+st.html("""
 <div class="hero-section">
     <div class="hero-container">
         <div class="hero-content">
@@ -932,15 +932,11 @@ st.markdown("""
                     </linearGradient>
                 </defs>
                 <rect width="380" height="260" rx="20" fill="url(#hero-bg)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                
-                <!-- 顶部状态栏 -->
                 <rect x="20" y="20" width="340" height="40" rx="10" fill="url(#hero-card)"/>
                 <circle cx="45" cy="40" r="8" fill="#4f46e5"/>
                 <rect x="62" y="36" width="120" height="6" rx="3" fill="rgba(255,255,255,0.3)"/>
                 <rect x="62" y="46" width="80" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
                 <rect x="280" y="34" width="65" height="12" rx="6" fill="rgba(34,197,94,0.3)"/>
-                
-                <!-- 左侧课程大纲 -->
                 <rect x="20" y="75" width="170" height="165" rx="12" fill="url(#hero-card)"/>
                 <rect x="35" y="92" width="80" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
                 <rect x="35" y="108" width="140" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
@@ -953,16 +949,12 @@ st.markdown("""
                 <rect x="55" y="178" width="90" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
                 <rect x="35" y="195" width="12" height="12" rx="3" fill="rgba(255,255,255,0.15)"/>
                 <rect x="55" y="198" width="105" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                
-                <!-- 右侧卡片 -->
                 <rect x="205" y="75" width="155" height="95" rx="12" fill="url(#hero-card)"/>
                 <circle cx="235" cy="105" r="14" fill="url(#hero-accent)" opacity="0.8"/>
                 <rect x="258" y="98" width="85" height="6" rx="3" fill="rgba(255,255,255,0.3)"/>
                 <rect x="258" y="110" width="60" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
                 <rect x="220" y="135" width="125" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
                 <rect x="220" y="145" width="100" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
-                
-                <!-- 底部进度 -->
                 <rect x="205" y="185" width="155" height="55" rx="12" fill="url(#hero-card)"/>
                 <rect x="220" y="202" width="100" height="5" rx="2.5" fill="rgba(255,255,255,0.1)"/>
                 <rect x="220" y="202" width="75" height="5" rx="2.5" fill="url(#hero-accent)"/>
@@ -972,7 +964,7 @@ st.markdown("""
         </div>
     </div>
 </div>
-""", unsafe_allow_html=True)
+""")
 
 # 跳转锚点占位
 st.markdown("<div id='workspace-anchor'></div>", unsafe_allow_html=True)
@@ -1025,7 +1017,7 @@ st.html("""
             <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配。</div>
         </div>
         <div class="feature-preview">
-            <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;">
+            <svg viewBox="0 0 320 200" width="320" height="200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;height:auto;display:block;">
                 <defs>
                     <linearGradient id="outline-bg" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:rgba(129,140,248,0.15)"/>
@@ -1057,7 +1049,7 @@ st.html("""
 
     <div class="feature-row">
         <div class="feature-preview">
-            <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;">
+            <svg viewBox="0 0 320 200" width="320" height="200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;height:auto;display:block;">
                 <defs>
                     <linearGradient id="ppt-bg" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:rgba(245,158,11,0.12)"/>
@@ -1066,7 +1058,7 @@ st.html("""
                 </defs>
                 <rect x="10" y="10" width="300" height="180" rx="14" fill="url(#ppt-bg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
                 
-                <!-- 幻灯片列表 -->
+                
                 <rect x="25" y="35" width="50" height="35" rx="6" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
                 <rect x="32" y="45" width="36" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
                 <rect x="32" y="53" width="28" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
@@ -1077,7 +1069,7 @@ st.html("""
                 <rect x="25" y="125" width="50" height="35" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
                 <rect x="32" y="135" width="36" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
                 
-                <!-- 主幻灯片 -->
+                
                 <rect x="90" y="35" width="205" height="125" rx="10" fill="rgba(15,23,42,0.6)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
                 <rect x="110" y="55" width="120" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
                 <rect x="110" y="70" width="165" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
@@ -1103,7 +1095,7 @@ st.html("""
             <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助评估培训效果。</div>
         </div>
         <div class="feature-preview">
-            <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;">
+            <svg viewBox="0 0 320 200" width="320" height="200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;height:auto;display:block;">
                 <defs>
                     <linearGradient id="dash-bg" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:rgba(34,197,94,0.1)"/>
@@ -1112,19 +1104,19 @@ st.html("""
                 </defs>
                 <rect x="10" y="10" width="300" height="180" rx="14" fill="url(#dash-bg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
                 
-                <!-- 左侧分数 -->
+                
                 <circle cx="90" cy="95" r="50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
                 <circle cx="90" cy="95" r="50" fill="none" stroke="url(#hero-accent)" stroke-width="8" stroke-dasharray="220 314" stroke-linecap="round"/>
                 <text x="90" y="90" font-size="22" font-weight="700" fill="white" text-anchor="middle" font-family="system-ui,sans-serif">86</text>
                 <text x="90" y="110" font-size="10" fill="rgba(255,255,255,0.4)" text-anchor="middle" font-family="system-ui,sans-serif">平均分</text>
                 
-                <!-- 右侧柱状图 -->
+                
                 <rect x="170" y="55" width="18" height="75" rx="4" fill="rgba(129,140,248,0.4)"/>
                 <rect x="198" y="75" width="18" height="55" rx="4" fill="rgba(129,140,248,0.3)"/>
                 <rect x="226" y="45" width="18" height="85" rx="4" fill="rgba(192,132,252,0.5)"/>
                 <rect x="254" y="65" width="18" height="65" rx="4" fill="rgba(129,140,248,0.35)"/>
                 
-                <!-- 底部指标 -->
+                
                 <rect x="45" y="160" width="70" height="20" rx="6" fill="rgba(255,255,255,0.05)"/>
                 <rect x="125" y="160" width="70" height="20" rx="6" fill="rgba(255,255,255,0.05)"/>
                 <rect x="205" y="160" width="70" height="20" rx="6" fill="rgba(255,255,255,0.05)"/>
@@ -1134,7 +1126,7 @@ st.html("""
 
     <div class="feature-row">
         <div class="feature-preview">
-            <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;">
+            <svg viewBox="0 0 320 200" width="320" height="200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;height:auto;display:block;">
                 <defs>
                     <linearGradient id="practice-bg" x1="0%" y1="0%" x2="100%" y2="100%">
                         <stop offset="0%" style="stop-color:rgba(59,130,246,0.12)"/>
@@ -1143,14 +1135,14 @@ st.html("""
                 </defs>
                 <rect x="10" y="10" width="300" height="180" rx="14" fill="url(#practice-bg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
                 
-                <!-- 电脑屏幕 -->
+                
                 <rect x="55" y="35" width="210" height="120" rx="10" fill="rgba(15,23,42,0.7)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
                 <rect x="55" y="35" width="210" height="18" rx="10" fill="rgba(255,255,255,0.05)"/>
                 <circle cx="70" cy="44" r="3" fill="#ef4444"/>
                 <circle cx="82" cy="44" r="3" fill="#f59e0b"/>
                 <circle cx="94" cy="44" r="3" fill="#22c55e"/>
                 
-                <!-- 屏幕内容 -->
+                
                 <rect x="75" y="65" width="60" height="40" rx="6" fill="rgba(79,70,229,0.2)"/>
                 <rect x="85" y="78" width="40" height="3" rx="1.5" fill="rgba(255,255,255,0.25)"/>
                 <rect x="85" y="86" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
@@ -1164,7 +1156,7 @@ st.html("""
                 <circle cx="235" cy="130" r="6" fill="#22c55e"/>
                 <polyline points="232,130 235,133 240,127" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 
-                <!-- 键盘底座 -->
+                
                 <rect x="110" y="160" width="100" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
             </svg>
         </div>

@@ -914,14 +914,13 @@ with col3:
 # ============================================================
 # 功能模块展示 - 左右交替布局
 # ============================================================
-st.markdown("""
+st.html("""
 <div class="features-section" id="features">
     <div style="text-align:center;margin-bottom:1rem;">
         <div class="features-title">覆盖全链路培训需求</div>
         <div class="features-subtitle">从规划到考核，为您生成体系化的完整培训方案</div>
     </div>
 
-    <!-- Row 1: 课程大纲自动构建 - 文字左，SVG右 -->
     <div class="feature-row">
         <div class="feature-content">
             <div class="feature-tag blue">智能生成</div>
@@ -951,7 +950,6 @@ st.markdown("""
         </div>
     </div>
 
-    <!-- Row 2: 培训 PPT 即开即用 - SVG左，文字右 -->
     <div class="feature-row">
         <div class="feature-preview">
             <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
@@ -980,7 +978,6 @@ st.markdown("""
         </div>
     </div>
 
-    <!-- Row 3: 智能考核与评估 - 文字左，SVG右 -->
     <div class="feature-row">
         <div class="feature-content">
             <div class="feature-tag blue">多维度</div>
@@ -1014,7 +1011,6 @@ st.markdown("""
         </div>
     </div>
 
-    <!-- Row 4: 实操场景化练习 - SVG左，文字右 -->
     <div class="feature-row">
         <div class="feature-preview">
             <svg viewBox="0 0 280 180" xmlns="http://www.w3.org/2000/svg">
@@ -1051,7 +1047,7 @@ st.markdown("""
         </div>
     </div>
 </div>
-""", unsafe_allow_html=True)
+""")
 
 # ============================================================
 # 生成工作区（左右分栏）

@@ -105,13 +105,28 @@ st.markdown("""
         border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .nav-brand {
-        font-size: 1.1rem;
-        font-weight: 700;
-        background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: white;
+        letter-spacing: 0.02em;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .nav-brand::before {
+        content: '';
+        width: 28px;
+        height: 28px;
+        background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        border-radius: 8px;
+        display: inline-block;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
+    }
+    .nav-brand span {
+        background: linear-gradient(135deg, #ffffff 0%, #c7d2fe 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        letter-spacing: 0.05em;
     }
     .nav-btn {
         background: transparent;
@@ -130,8 +145,8 @@ st.markdown("""
     
     /* ===== Hero 区域 ===== */
     .hero-section {
-        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 27, 75, 0.6) 50%, rgba(15, 23, 42, 0.95) 100%);
-        padding: 2.5rem 2rem 3rem 2rem;
+        background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+        padding: 4rem 2rem 5rem 2rem;
         color: white;
         text-align: left;
         position: relative;
@@ -142,11 +157,11 @@ st.markdown("""
     .hero-section::before {
         content: '';
         position: absolute;
-        top: 0;
-        right: 0;
-        width: 60%;
-        height: 100%;
-        background: radial-gradient(circle at 80% 30%, rgba(129, 140, 248, 0.15) 0%, transparent 60%);
+        top: -50%;
+        right: -20%;
+        width: 80%;
+        height: 200%;
+        background: radial-gradient(circle at 70% 40%, rgba(79, 70, 229, 0.25) 0%, rgba(6, 182, 212, 0.1) 40%, transparent 70%);
         pointer-events: none;
     }
     .hero-container {
@@ -156,34 +171,42 @@ st.markdown("""
         max-width: 1200px;
         margin: 0 auto;
         position: relative;
-        gap: 2.5rem;
+        gap: 4rem;
     }
     .hero-content {
         flex: 1;
         min-width: 0;
     }
     .hero-graphic {
-        flex: 0 0 360px;
+        flex: 0 0 480px;
         display: flex;
         align-items: center;
         justify-content: center;
     }
     .hero-title {
-        font-size: 2.6rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        line-height: 1.25;
+        font-size: 3.2rem;
+        font-weight: 800;
+        margin-bottom: 1.25rem;
+        line-height: 1.15;
         color: white;
         position: relative;
-        letter-spacing: -0.02em;
+        letter-spacing: -0.03em;
+        text-shadow: 0 0 40px rgba(79, 70, 229, 0.3);
+    }
+    .hero-title .highlight {
+        background: linear-gradient(135deg, #818cf8 0%, #22d3ee 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
     .hero-subtitle {
-        font-size: 1rem;
-        color: rgba(199, 210, 254, 0.75);
+        font-size: 1.1rem;
+        color: rgba(199, 210, 254, 0.8);
         font-weight: 400;
-        line-height: 1.7;
-        max-width: 480px;
+        line-height: 1.8;
+        max-width: 520px;
         position: relative;
+        margin-bottom: 0.5rem;
     }
     .hero-buttons {
         margin-top: 1.5rem;
@@ -233,182 +256,223 @@ st.markdown("""
     
     /* ===== 三步流程 ===== */
     .steps-section {
-        background: rgba(10, 14, 23, 0.6);
-        padding: 1.5rem 2rem;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.8) 0%, rgba(10, 14, 23, 0.95) 100%);
+        padding: 3rem 2rem;
         margin: 0 -1rem;
         border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .steps-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        text-align: center;
         max-width: 1200px;
-        margin: 0 auto 1.25rem auto;
+        margin: 0 auto 2rem auto;
     }
     .steps-title {
-        font-size: 1.25rem;
-        font-weight: 600;
+        font-size: 1.6rem;
+        font-weight: 700;
         color: white;
+        margin-bottom: 0.5rem;
     }
     .steps-subtitle {
-        font-size: 0.8rem;
-        color: rgba(255,255,255,0.45);
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.5);
     }
     .steps-container {
         display: flex;
-        gap: 1rem;
-        max-width: 1200px;
+        align-items: stretch;
+        gap: 0;
+        max-width: 1000px;
         margin: 0 auto;
     }
     .step-card {
         flex: 1;
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 12px;
-        padding: 1.25rem;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 16px;
+        padding: 1.75rem;
         transition: all 0.2s;
+        text-align: center;
+        position: relative;
     }
     .step-card:hover {
-        background: rgba(255,255,255,0.07);
-        border-color: rgba(129, 140, 248, 0.25);
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(129, 140, 248, 0.3);
+        transform: translateY(-2px);
+    }
+    .step-arrow {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 48px;
+        flex-shrink: 0;
+    }
+    .step-arrow svg {
+        width: 28px;
+        height: 28px;
+        color: rgba(129, 140, 248, 0.6);
     }
     .step-number {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        width: 26px;
-        height: 26px;
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
         color: white;
-        border-radius: 6px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        margin-bottom: 0.75rem;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35);
     }
     .step-name {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: white;
-        margin-bottom: 0.3rem;
-    }
-    .step-desc {
-        font-size: 0.75rem;
-        color: rgba(255,255,255,0.5);
-        line-height: 1.5;
-    }
-    
-    /* ===== 功能模块展示 - 左右交替布局 ===== */
-    .features-section {
-        background: rgba(10, 14, 23, 0.4);
-        padding: 2.5rem 2rem;
-        margin: 0 -1rem;
-    }
-    .features-title {
-        font-size: 1.4rem;
+        font-size: 1.05rem;
         font-weight: 600;
         color: white;
         margin-bottom: 0.5rem;
     }
-    .features-subtitle {
-        font-size: 0.85rem;
-        color: rgba(255,255,255,0.5);
-        margin-bottom: 2rem;
-    }
-    .feature-row {
-        display: flex;
-        align-items: center;
-        gap: 2.5rem;
-        margin-bottom: 1.5rem;
-        max-width: 1200px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    .feature-content {
-        flex: 1;
-    }
-    .feature-tag {
-        display: inline-block;
-        padding: 0.25rem 0.7rem;
-        border-radius: 6px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        margin-bottom: 0.6rem;
-    }
-    .feature-tag.orange {
-        background: rgba(192, 132, 252, 0.15);
-        color: #e9d5ff;
-    }
-    .feature-tag.blue {
-        background: rgba(129, 140, 248, 0.15);
-        color: #c7d2fe;
-    }
-    .feature-name {
-        font-size: 1.15rem;
-        font-weight: 600;
-        color: white;
-        margin-bottom: 0.4rem;
-    }
-    .feature-desc {
-        font-size: 0.85rem;
+    .step-desc {
+        font-size: 0.8rem;
         color: rgba(255,255,255,0.55);
         line-height: 1.6;
     }
-    .feature-preview {
-        flex: 1;
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 16px;
-        padding: 1.5rem;
-        min-height: 180px;
+    
+    /* ===== 功能模块展示 - 卡片网格 ===== */
+    .features-section {
+        background: linear-gradient(180deg, rgba(10, 14, 23, 0.95) 0%, rgba(15, 23, 42, 0.9) 100%);
+        padding: 4rem 2rem;
+        margin: 0 -1rem;
+    }
+    .features-header {
+        text-align: center;
+        max-width: 1200px;
+        margin: 0 auto 2.5rem auto;
+    }
+    .features-title {
+        font-size: 1.7rem;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+    }
+    .features-subtitle {
+        font-size: 0.95rem;
+        color: rgba(255,255,255,0.5);
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+    .features-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .feature-card {
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 20px;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        transition: all 0.25s;
+        position: relative;
+        overflow: hidden;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255,255,255,0.08);
+        border-color: rgba(129, 140, 248, 0.3);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+    }
+    .feature-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #4f46e5, #06b6d4);
+        opacity: 0;
+        transition: opacity 0.25s;
+    }
+    .feature-card:hover::before {
+        opacity: 1;
+    }
+    .feature-icon {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 1.25rem auto;
+        background: rgba(255,255,255,0.05);
+        border-radius: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+    .feature-icon svg {
+        width: 42px;
+        height: 42px;
+    }
+    .feature-name {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: white;
+        margin-bottom: 0.6rem;
+    }
+    .feature-desc {
+        font-size: 0.8rem;
+        color: rgba(255,255,255,0.55);
+        line-height: 1.7;
     }
     
     /* ===== 工作区 ===== */
     .workspace-section {
-        background: rgba(10, 14, 23, 0.8);
-        padding: 2rem 2rem;
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0.9) 0%, rgba(10, 14, 23, 0.95) 100%);
+        padding: 3rem 2rem;
         margin: 0 -1rem;
         min-height: auto;
         border-top: 1px solid rgba(255,255,255,0.05);
     }
     .workspace-header {
+        text-align: center;
         max-width: 1200px;
-        margin: 0 auto 1.5rem auto;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+        margin: 0 auto 2rem auto;
     }
     .workspace-title {
-        font-size: 1.4rem;
-        font-weight: 600;
+        font-size: 1.7rem;
+        font-weight: 700;
         color: white;
+        margin-bottom: 0.5rem;
     }
     .workspace-subtitle {
-        font-size: 0.8rem;
-        color: rgba(255,255,255,0.45);
+        font-size: 0.9rem;
+        color: rgba(255,255,255,0.5);
     }
-    
+    .workspace-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
     /* 左侧输入区 */
     .input-panel {
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 16px;
-        padding: 1.5rem;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 20px;
+        padding: 1.75rem;
         height: 100%;
     }
     .input-panel-title {
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 600;
         color: white;
-        margin-bottom: 1.25rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.6rem;
     }
     .form-label {
         font-size: 0.78rem;
@@ -444,22 +508,22 @@ st.markdown("""
     
     /* 右侧预览区 */
     .preview-panel {
-        background: rgba(255,255,255,0.04);
-        border: 1px solid rgba(255,255,255,0.08);
-        border-radius: 16px;
-        padding: 1.5rem;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 20px;
+        padding: 1.75rem;
         height: 100%;
     }
     .preview-panel-title {
-        font-size: 1rem;
+        font-size: 1.1rem;
         font-weight: 600;
         color: white;
-        margin-bottom: 1.25rem;
-        padding-bottom: 0.75rem;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.6rem;
     }
     .preview-card {
         background: rgba(255,255,255,0.03);
@@ -657,19 +721,46 @@ st.markdown("""
     }
     
     /* ===== 响应式 ===== */
-    @media (max-width: 768px) {
-        .feature-row {
-            flex-direction: column;
-            gap: 1rem;
+    @media (max-width: 1024px) {
+        .features-grid {
+            grid-template-columns: repeat(2, 1fr);
         }
+        .workspace-grid {
+            grid-template-columns: 1fr;
+        }
+        .hero-graphic {
+            flex: 0 0 360px;
+        }
+    }
+    @media (max-width: 768px) {
         .hero-container {
             flex-direction: column;
+            text-align: center;
+            gap: 2rem;
         }
         .hero-graphic {
             display: none;
         }
+        .hero-title {
+            font-size: 2.2rem;
+        }
+        .hero-subtitle {
+            margin: 0 auto;
+        }
+        .hero-buttons {
+            justify-content: center;
+        }
         .steps-container {
             flex-direction: column;
+            gap: 1rem;
+        }
+        .step-arrow {
+            transform: rotate(90deg);
+            width: auto;
+            height: 32px;
+        }
+        .features-grid {
+            grid-template-columns: 1fr;
         }
     }
 </style>
@@ -899,7 +990,7 @@ if "scroll_to_workspace" not in st.session_state:
 st.markdown('<div id="top" style="position: absolute; top: 0; left: 0; width: 0; height: 0;"></div>', unsafe_allow_html=True)
 nav_cols = st.columns([6, 1])
 with nav_cols[0]:
-    st.markdown('<div class="nav-brand">企业培训智能化平台</div>', unsafe_allow_html=True)
+    st.markdown('<div class="nav-brand"><span>企业培训智能化平台</span></div>', unsafe_allow_html=True)
 
 # ============================================================
 # Hero 区域 - 配图 + 跳转按钮
@@ -908,7 +999,7 @@ st.html("""
 <div class="hero-section">
     <div class="hero-container">
         <div class="hero-content">
-            <div class="hero-title">从产品到培训，<br>一步到位</div>
+            <div class="hero-title">从产品到培训，<br><span class="highlight">一步到位</span></div>
             <div class="hero-subtitle">只需输入产品信息，描述核心功能与场景，即可自动生成全套培训方案，从蓝图到1V1点评，让产品培训事半功倍。</div>
             <div class="hero-buttons">
                 <a href="#workspace" class="hero-btn-primary">立即体验</a>
@@ -916,50 +1007,53 @@ st.html("""
             </div>
         </div>
         <div class="hero-graphic">
-            <svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:380px;filter:drop-shadow(0 25px 50px rgba(0,0,0,0.4));">
+            <svg viewBox="0 0 480 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:480px;height:auto;display:block;filter:drop-shadow(0 30px 60px rgba(0,0,0,0.5));">
                 <defs>
-                    <linearGradient id="hero-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#1e1b4b;stop-opacity:0.9"/>
-                        <stop offset="100%" style="stop-color:#312e81;stop-opacity:0.8"/>
+                    <linearGradient id="dash-board-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#1e1b4b;stop-opacity:0.95"/>
+                        <stop offset="100%" style="stop-color:#312e81;stop-opacity:0.85"/>
                     </linearGradient>
-                    <linearGradient id="hero-card" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:rgba(255,255,255,0.12)"/>
+                    <linearGradient id="dash-card" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:rgba(255,255,255,0.14)"/>
                         <stop offset="100%" style="stop-color:rgba(255,255,255,0.05)"/>
                     </linearGradient>
-                    <linearGradient id="hero-accent" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#818cf8"/>
-                        <stop offset="100%" style="stop-color:#c084fc"/>
+                    <linearGradient id="dash-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#22d3ee"/>
+                        <stop offset="100%" style="stop-color:#818cf8"/>
                     </linearGradient>
                 </defs>
-                <rect width="380" height="260" rx="20" fill="url(#hero-bg)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                <rect x="20" y="20" width="340" height="40" rx="10" fill="url(#hero-card)"/>
-                <circle cx="45" cy="40" r="8" fill="#4f46e5"/>
-                <rect x="62" y="36" width="120" height="6" rx="3" fill="rgba(255,255,255,0.3)"/>
-                <rect x="62" y="46" width="80" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
-                <rect x="280" y="34" width="65" height="12" rx="6" fill="rgba(34,197,94,0.3)"/>
-                <rect x="20" y="75" width="170" height="165" rx="12" fill="url(#hero-card)"/>
-                <rect x="35" y="92" width="80" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
-                <rect x="35" y="108" width="140" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
-                <rect x="35" y="118" width="120" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
-                <rect x="35" y="135" width="12" height="12" rx="3" fill="#4f46e5"/>
-                <rect x="55" y="138" width="100" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                <rect x="35" y="155" width="12" height="12" rx="3" fill="#22c55e"/>
-                <rect x="55" y="158" width="110" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                <rect x="35" y="175" width="12" height="12" rx="3" fill="#f59e0b"/>
-                <rect x="55" y="178" width="90" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                <rect x="35" y="195" width="12" height="12" rx="3" fill="rgba(255,255,255,0.15)"/>
-                <rect x="55" y="198" width="105" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                <rect x="205" y="75" width="155" height="95" rx="12" fill="url(#hero-card)"/>
-                <circle cx="235" cy="105" r="14" fill="url(#hero-accent)" opacity="0.8"/>
-                <rect x="258" y="98" width="85" height="6" rx="3" fill="rgba(255,255,255,0.3)"/>
-                <rect x="258" y="110" width="60" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
-                <rect x="220" y="135" width="125" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
-                <rect x="220" y="145" width="100" height="4" rx="2" fill="rgba(255,255,255,0.1)"/>
-                <rect x="205" y="185" width="155" height="55" rx="12" fill="url(#hero-card)"/>
-                <rect x="220" y="202" width="100" height="5" rx="2.5" fill="rgba(255,255,255,0.1)"/>
-                <rect x="220" y="202" width="75" height="5" rx="2.5" fill="url(#hero-accent)"/>
-                <rect x="220" y="218" width="125" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
-                <text x="340" y="222" font-size="11" fill="rgba(255,255,255,0.5)" text-anchor="end" font-family="system-ui,sans-serif">75%</text>
+                <rect width="480" height="320" rx="24" fill="url(#dash-board-bg)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                <rect x="24" y="24" width="432" height="48" rx="12" fill="url(#dash-card)"/>
+                <circle cx="52" cy="48" r="10" fill="#4f46e5"/>
+                <rect x="72" y="42" width="140" height="8" rx="4" fill="rgba(255,255,255,0.35)"/>
+                <rect x="72" y="54" width="100" height="5" rx="2.5" fill="rgba(255,255,255,0.15)"/>
+                <rect x="360" y="40" width="80" height="16" rx="8" fill="rgba(34,197,94,0.25)"/>
+                <rect x="24" y="88" width="200" height="208" rx="16" fill="url(#dash-card)"/>
+                <rect x="44" y="112" width="100" height="8" rx="4" fill="rgba(255,255,255,0.4)"/>
+                <rect x="44" y="132" width="160" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="44" y="156" width="14" height="14" rx="4" fill="#4f46e5"/>
+                <rect x="66" y="160" width="120" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
+                <rect x="44" y="184" width="14" height="14" rx="4" fill="#22c55e"/>
+                <rect x="66" y="188" width="130" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
+                <rect x="44" y="212" width="14" height="14" rx="4" fill="#f59e0b"/>
+                <rect x="66" y="216" width="110" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
+                <rect x="44" y="240" width="14" height="14" rx="4" fill="rgba(255,255,255,0.15)"/>
+                <rect x="66" y="244" width="125" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
+                <rect x="240" y="88" width="216" height="120" rx="16" fill="url(#dash-card)"/>
+                <rect x="264" y="116" width="120" height="8" rx="4" fill="rgba(255,255,255,0.35)"/>
+                <rect x="264" y="134" width="168" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="264" y="146" width="150" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="264" y="158" width="140" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="264" y="180" width="90" height="10" rx="5" fill="url(#dash-accent)"/>
+                <rect x="264" y="180" width="60" height="10" rx="5" fill="rgba(255,255,255,0.1)"/>
+                <rect x="240" y="224" width="216" height="72" rx="16" fill="url(#dash-card)"/>
+                <circle cx="290" cy="260" r="28" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+                <circle cx="290" cy="260" r="28" fill="none" stroke="url(#dash-accent)" stroke-width="6" stroke-dasharray="110 176" stroke-linecap="round"/>
+                <text x="290" y="256" font-size="16" font-weight="700" fill="white" text-anchor="middle" font-family="system-ui,sans-serif">68%</text>
+                <text x="290" y="272" font-size="8" fill="rgba(255,255,255,0.4)" text-anchor="middle" font-family="system-ui,sans-serif">完成度</text>
+                <rect x="350" y="246" width="90" height="8" rx="4" fill="rgba(255,255,255,0.12)"/>
+                <rect x="350" y="258" width="70" height="6" rx="3" fill="rgba(255,255,255,0.08)"/>
+                <rect x="350" y="270" width="80" height="6" rx="3" fill="rgba(255,255,255,0.08)"/>
             </svg>
         </div>
     </div>
@@ -972,196 +1066,102 @@ st.markdown("<div id='workspace-anchor'></div>", unsafe_allow_html=True)
 # ============================================================
 # 三步流程
 # ============================================================
-st.markdown("""
+st.html("""
 <div class="steps-section">
     <div class="steps-header">
-        <div>
-            <div class="steps-title">三步生成培训方案</div>
-            <div class="steps-subtitle">从输入到输出，全程自动化智能化</div>
-        </div>
+        <div class="steps-title">三步生成培训方案</div>
+        <div class="steps-subtitle">从输入到输出，全程自动化智能化</div>
     </div>
     <div class="steps-container">
         <div class="step-card">
             <div class="step-number">1</div>
             <div class="step-name">输入产品信息</div>
-            <div class="step-desc">填写产品名称、核心功能简介</div>
+            <div class="step-desc">填写产品名称、核心功能与目标人群</div>
+        </div>
+        <div class="step-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
         <div class="step-card">
             <div class="step-number">2</div>
             <div class="step-name">选择培训场景</div>
-            <div class="step-desc">指定对象和期望时长</div>
+            <div class="step-desc">指定对象、时长与输出模块</div>
+        </div>
+        <div class="step-arrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </div>
         <div class="step-card">
             <div class="step-number">3</div>
             <div class="step-name">一键生成输出</div>
-            <div class="step-desc">获得大纲、PPT、试题等材料</div>
+            <div class="step-desc">获得大纲、PPT、试题等全套材料</div>
         </div>
     </div>
 </div>
-""", unsafe_allow_html=True)
+""")
 
 # ============================================================
-# 功能模块展示 - 左右交替布局
+# 功能模块展示 - 卡片网格
 # ============================================================
 st.html("""
 <div class="features-section" id="features">
-    <div style="text-align:center;margin-bottom:1.5rem;">
+    <div class="features-header">
         <div class="features-title">覆盖全链路培训需求</div>
-        <div class="features-subtitle">从规划到考核，为您生成体系化的完整培训方案</div>
+        <div class="features-subtitle">从课程规划到效果评估，一站式生成完整培训方案</div>
     </div>
-
-    <div class="feature-row">
-        <div class="feature-content">
-            <div class="feature-tag blue">智能生成</div>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="6" width="32" height="36" rx="4" fill="rgba(129,140,248,0.15)" stroke="#818cf8" stroke-width="2"/>
+                    <rect x="14" y="14" width="20" height="3" rx="1.5" fill="#818cf8"/>
+                    <rect x="14" y="22" width="16" height="2.5" rx="1.25" fill="rgba(129,140,248,0.6)"/>
+                    <rect x="14" y="28" width="18" height="2.5" rx="1.25" fill="rgba(129,140,248,0.4)"/>
+                    <rect x="14" y="34" width="12" height="2.5" rx="1.25" fill="rgba(129,140,248,0.4)"/>
+                </svg>
+            </div>
             <div class="feature-name">课程大纲自动构建</div>
             <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配。</div>
         </div>
-        <div class="feature-preview">
-            <svg viewBox="0 0 320 200" width="320" height="200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;height:auto;display:block;">
-                <defs>
-                    <linearGradient id="outline-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:rgba(129,140,248,0.15)"/>
-                        <stop offset="100%" style="stop-color:rgba(192,132,252,0.08)"/>
-                    </linearGradient>
-                </defs>
-                <rect x="10" y="10" width="300" height="180" rx="14" fill="url(#outline-bg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <rect x="30" y="30" width="100" height="8" rx="4" fill="rgba(255,255,255,0.35)"/>
-                <rect x="30" y="48" width="180" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
-                
-                <rect x="30" y="70" width="12" height="12" rx="3" fill="#4f46e5"/>
-                <rect x="50" y="74" width="120" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                <rect x="50" y="84" width="90" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
-                
-                <rect x="30" y="105" width="12" height="12" rx="3" fill="#22c55e"/>
-                <rect x="50" y="109" width="130" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                <rect x="50" y="119" width="100" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
-                
-                <rect x="30" y="140" width="12" height="12" rx="3" fill="#f59e0b"/>
-                <rect x="50" y="144" width="110" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                <rect x="50" y="154" width="80" height="3" rx="1.5" fill="rgba(255,255,255,0.1)"/>
-                
-                <rect x="200" y="90" width="90" height="50" rx="8" fill="rgba(255,255,255,0.05)" stroke="rgba(129,140,248,0.2)" stroke-width="1"/>
-                <rect x="215" y="108" width="60" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                <rect x="215" y="118" width="40" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
-            </svg>
-        </div>
-    </div>
-
-    <div class="feature-row">
-        <div class="feature-preview">
-            <svg viewBox="0 0 320 200" width="320" height="200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;height:auto;display:block;">
-                <defs>
-                    <linearGradient id="ppt-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:rgba(245,158,11,0.12)"/>
-                        <stop offset="100%" style="stop-color:rgba(249,115,22,0.06)"/>
-                    </linearGradient>
-                </defs>
-                <rect x="10" y="10" width="300" height="180" rx="14" fill="url(#ppt-bg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                
-                
-                <rect x="25" y="35" width="50" height="35" rx="6" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                <rect x="32" y="45" width="36" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                <rect x="32" y="53" width="28" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
-                
-                <rect x="25" y="80" width="50" height="35" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <rect x="32" y="90" width="36" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
-                
-                <rect x="25" y="125" width="50" height="35" rx="6" fill="rgba(255,255,255,0.05)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <rect x="32" y="135" width="36" height="4" rx="2" fill="rgba(255,255,255,0.18)"/>
-                
-                
-                <rect x="90" y="35" width="205" height="125" rx="10" fill="rgba(15,23,42,0.6)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                <rect x="110" y="55" width="120" height="6" rx="3" fill="rgba(255,255,255,0.35)"/>
-                <rect x="110" y="70" width="165" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
-                <rect x="110" y="80" width="150" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
-                <rect x="110" y="90" width="140" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
-                
-                <rect x="110" y="110" width="80" height="30" rx="6" fill="rgba(79,70,229,0.25)"/>
-                <circle cx="220" cy="125" r="15" fill="rgba(34,197,94,0.25)"/>
-                <path d="M212,125 L218,131 L230,119" fill="none" stroke="#22c55e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-        </div>
-        <div class="feature-content">
-            <div class="feature-tag orange">一键输出</div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="10" width="36" height="28" rx="4" fill="rgba(245,158,11,0.15)" stroke="#f59e0b" stroke-width="2"/>
+                    <rect x="11" y="16" width="26" height="4" rx="2" fill="#f59e0b"/>
+                    <rect x="11" y="24" width="20" height="2.5" rx="1.25" fill="rgba(245,158,11,0.6)"/>
+                    <rect x="11" y="29" width="24" height="2.5" rx="1.25" fill="rgba(245,158,11,0.4)"/>
+                    <circle cx="37" cy="32" r="6" fill="#4f46e5"/>
+                    <path d="M34 32l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
             <div class="feature-name">培训 PPT 即开即用</div>
             <div class="feature-desc">自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结。</div>
         </div>
-    </div>
-
-    <div class="feature-row">
-        <div class="feature-content">
-            <div class="feature-tag blue">多维度</div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="8" width="40" height="32" rx="4" fill="rgba(34,197,94,0.15)" stroke="#22c55e" stroke-width="2"/>
+                    <circle cx="24" cy="24" r="10" fill="none" stroke="#22c55e" stroke-width="3" stroke-dasharray="40 63" stroke-linecap="round"/>
+                    <text x="24" y="27" font-size="10" font-weight="700" fill="#22c55e" text-anchor="middle" font-family="system-ui,sans-serif">86</text>
+                    <rect x="34" y="12" width="6" height="12" rx="1" fill="rgba(129,140,248,0.5)"/>
+                    <rect x="42" y="16" width="6" height="8" rx="1" fill="rgba(192,132,252,0.5)"/>
+                </svg>
+            </div>
             <div class="feature-name">智能考核与评估</div>
             <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助评估培训效果。</div>
         </div>
-        <div class="feature-preview">
-            <svg viewBox="0 0 320 200" width="320" height="200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;height:auto;display:block;">
-                <defs>
-                    <linearGradient id="dash-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:rgba(34,197,94,0.1)"/>
-                        <stop offset="100%" style="stop-color:rgba(59,130,246,0.08)"/>
-                    </linearGradient>
-                </defs>
-                <rect x="10" y="10" width="300" height="180" rx="14" fill="url(#dash-bg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                
-                
-                <circle cx="90" cy="95" r="50" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
-                <circle cx="90" cy="95" r="50" fill="none" stroke="url(#hero-accent)" stroke-width="8" stroke-dasharray="220 314" stroke-linecap="round"/>
-                <text x="90" y="90" font-size="22" font-weight="700" fill="white" text-anchor="middle" font-family="system-ui,sans-serif">86</text>
-                <text x="90" y="110" font-size="10" fill="rgba(255,255,255,0.4)" text-anchor="middle" font-family="system-ui,sans-serif">平均分</text>
-                
-                
-                <rect x="170" y="55" width="18" height="75" rx="4" fill="rgba(129,140,248,0.4)"/>
-                <rect x="198" y="75" width="18" height="55" rx="4" fill="rgba(129,140,248,0.3)"/>
-                <rect x="226" y="45" width="18" height="85" rx="4" fill="rgba(192,132,252,0.5)"/>
-                <rect x="254" y="65" width="18" height="65" rx="4" fill="rgba(129,140,248,0.35)"/>
-                
-                
-                <rect x="45" y="160" width="70" height="20" rx="6" fill="rgba(255,255,255,0.05)"/>
-                <rect x="125" y="160" width="70" height="20" rx="6" fill="rgba(255,255,255,0.05)"/>
-                <rect x="205" y="160" width="70" height="20" rx="6" fill="rgba(255,255,255,0.05)"/>
-            </svg>
-        </div>
-    </div>
-
-    <div class="feature-row">
-        <div class="feature-preview">
-            <svg viewBox="0 0 320 200" width="320" height="200" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px;height:auto;display:block;">
-                <defs>
-                    <linearGradient id="practice-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:rgba(59,130,246,0.12)"/>
-                        <stop offset="100%" style="stop-color:rgba(99,102,241,0.06)"/>
-                    </linearGradient>
-                </defs>
-                <rect x="10" y="10" width="300" height="180" rx="14" fill="url(#practice-bg)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                
-                
-                <rect x="55" y="35" width="210" height="120" rx="10" fill="rgba(15,23,42,0.7)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                <rect x="55" y="35" width="210" height="18" rx="10" fill="rgba(255,255,255,0.05)"/>
-                <circle cx="70" cy="44" r="3" fill="#ef4444"/>
-                <circle cx="82" cy="44" r="3" fill="#f59e0b"/>
-                <circle cx="94" cy="44" r="3" fill="#22c55e"/>
-                
-                
-                <rect x="75" y="65" width="60" height="40" rx="6" fill="rgba(79,70,229,0.2)"/>
-                <rect x="85" y="78" width="40" height="3" rx="1.5" fill="rgba(255,255,255,0.25)"/>
-                <rect x="85" y="86" width="30" height="3" rx="1.5" fill="rgba(255,255,255,0.12)"/>
-                
-                <rect x="150" y="65" width="95" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
-                <rect x="150" y="75" width="85" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
-                <rect x="150" y="85" width="95" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
-                
-                <rect x="75" y="120" width="170" height="20" rx="6" fill="rgba(34,197,94,0.15)"/>
-                <rect x="85" y="128" width="100" height="4" rx="2" fill="rgba(255,255,255,0.25)"/>
-                <circle cx="235" cy="130" r="6" fill="#22c55e"/>
-                <polyline points="232,130 235,133 240,127" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                
-                
-                <rect x="110" y="160" width="100" height="8" rx="4" fill="rgba(255,255,255,0.1)"/>
-            </svg>
-        </div>
-        <div class="feature-content">
-            <div class="feature-tag orange">实战导向</div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="8" width="36" height="26" rx="4" fill="rgba(6,182,212,0.15)" stroke="#06b6d4" stroke-width="2"/>
+                    <rect x="6" y="8" width="36" height="5" rx="4" fill="rgba(255,255,255,0.1)"/>
+                    <circle cx="11" cy="10.5" r="1.5" fill="#ef4444"/>
+                    <circle cx="15" cy="10.5" r="1.5" fill="#f59e0b"/>
+                    <circle cx="19" cy="10.5" r="1.5" fill="#22c55e"/>
+                    <rect x="12" y="18" width="12" height="10" rx="2" fill="rgba(79,70,229,0.25)"/>
+                    <rect x="28" y="18" width="10" height="2.5" rx="1.25" fill="rgba(255,255,255,0.2)"/>
+                    <rect x="28" y="23" width="8" height="2.5" rx="1.25" fill="rgba(255,255,255,0.12)"/>
+                    <rect x="14" y="38" width="20" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
+                </svg>
+            </div>
             <div class="feature-name">实操场景化练习</div>
             <div class="feature-desc">根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中掌握核心功能。</div>
         </div>
@@ -1189,12 +1189,10 @@ if st.session_state.scroll_to_workspace:
 st.markdown("""
 <div class="workspace-section" id="workspace">
     <div class="workspace-header">
-        <div>
-            <div class="workspace-title">开始生成您的培训方案</div>
-            <div class="workspace-subtitle">填写左侧培训信息，右侧实时预览生成内容</div>
-        </div>
+        <div class="workspace-title">开始生成您的培训方案</div>
+        <div class="workspace-subtitle">填写培训信息，一键生成完整培训材料</div>
     </div>
-</div>
+    <div class="workspace-grid">
 """, unsafe_allow_html=True)
 
 # 检查 API Key
@@ -1218,7 +1216,7 @@ if not st.session_state.api_key:
         </div>
         <div class="footer-bottom">
             <div class="footer-copyright">© 2026 AI培训设计器</div>
-            <div class="footer-copyright">v4.8 | 由 ChelseaPYC 构建</div>
+            <div class="footer-copyright">v4.9 | 由 ChelseaPYC 构建</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1399,6 +1397,8 @@ with right_col:
     
     st.markdown("</div>", unsafe_allow_html=True)
 
+st.markdown("</div></div>", unsafe_allow_html=True)
+
 # ============================================================
 # 生成结果展示
 # ============================================================
@@ -1443,7 +1443,7 @@ st.markdown("""
     </div>
         <div class="footer-bottom">
             <div class="footer-copyright">© 2026 AI培训设计器</div>
-            <div class="footer-copyright">v4.8 | 由 ChelseaPYC 构建</div>
+            <div class="footer-copyright">v4.9 | 由 ChelseaPYC 构建</div>
         </div>
     </div>
 """, unsafe_allow_html=True)

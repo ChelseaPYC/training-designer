@@ -2,6 +2,24 @@ import streamlit as st
 import requests
 import json
 import time
+import base64
+from pathlib import Path
+
+# ============================================================
+# 图片资源转 Base64（用于 HTML 内嵌显示）
+# ============================================================
+def img_to_base64(filename):
+    img_path = Path(__file__).parent / "images" / filename
+    if img_path.exists():
+        return base64.b64encode(img_path.read_bytes()).decode()
+    return ""
+
+FEATURE_IMAGES = {
+    "outline": img_to_base64("feature-outline.png"),
+    "ppt": img_to_base64("feature-ppt.png"),
+    "assessment": img_to_base64("feature-assessment.png"),
+    "practice": img_to_base64("feature-practice.png"),
+}
 
 # ============================================================
 # 配置区：默认 API Key（通过 Streamlit Secrets 配置，用户无需手动设置）
@@ -262,7 +280,7 @@ st.markdown("""
         border-bottom: 1px solid rgba(255,255,255,0.05);
     }
     .steps-header {
-        text-align: center;
+        text-align: left;
         max-width: 1200px;
         margin: 0 auto 2rem auto;
     }
@@ -271,10 +289,13 @@ st.markdown("""
         font-weight: 700;
         color: white;
         margin-bottom: 0.5rem;
+        padding-left: 1rem;
+        border-left: 4px solid #4f46e5;
     }
     .steps-subtitle {
         font-size: 0.9rem;
         color: rgba(255,255,255,0.5);
+        padding-left: 1.25rem;
     }
     .steps-container {
         display: flex;
@@ -336,14 +357,14 @@ st.markdown("""
         line-height: 1.6;
     }
     
-    /* ===== 功能模块展示 - 卡片网格 ===== */
+    /* ===== 功能模块展示 - 左右交替布局 ===== */
     .features-section {
         background: linear-gradient(180deg, rgba(10, 14, 23, 0.95) 0%, rgba(15, 23, 42, 0.9) 100%);
         padding: 4rem 2rem;
         margin: 0 -1rem;
     }
     .features-header {
-        text-align: center;
+        text-align: left;
         max-width: 1200px;
         margin: 0 auto 2.5rem auto;
     }
@@ -352,76 +373,85 @@ st.markdown("""
         font-weight: 700;
         color: white;
         margin-bottom: 0.5rem;
+        padding-left: 1rem;
+        border-left: 4px solid #4f46e5;
     }
     .features-subtitle {
         font-size: 0.95rem;
         color: rgba(255,255,255,0.5);
         max-width: 600px;
-        margin: 0 auto;
+        margin: 0;
+        padding-left: 1.25rem;
         line-height: 1.6;
     }
-    .features-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.5rem;
-        max-width: 1200px;
-        margin: 0 auto;
-    }
-    .feature-card {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 20px;
-        padding: 2rem 1.5rem;
-        text-align: center;
-        transition: all 0.25s;
-        position: relative;
-        overflow: hidden;
-    }
-    .feature-card:hover {
-        transform: translateY(-5px);
-        background: rgba(255,255,255,0.08);
-        border-color: rgba(129, 140, 248, 0.3);
-        box-shadow: 0 20px 40px rgba(0,0,0,0.25);
-    }
-    .feature-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: linear-gradient(90deg, #4f46e5, #06b6d4);
-        opacity: 0;
-        transition: opacity 0.25s;
-    }
-    .feature-card:hover::before {
-        opacity: 1;
-    }
-    .feature-icon {
-        width: 80px;
-        height: 80px;
-        margin: 0 auto 1.25rem auto;
-        background: rgba(255,255,255,0.05);
-        border-radius: 20px;
+    .feature-row {
         display: flex;
         align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(255,255,255,0.1);
+        gap: 3rem;
+        margin-bottom: 2rem;
+        max-width: 1200px;
+        margin-left: auto;
+        margin-right: auto;
     }
-    .feature-icon svg {
-        width: 42px;
-        height: 42px;
+    .feature-row.reverse {
+        flex-direction: row-reverse;
+    }
+    .feature-content {
+        flex: 1;
+        min-width: 0;
+        text-align: left;
+    }
+    .feature-tag {
+        display: inline-block;
+        padding: 0.3rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+    }
+    .feature-tag.blue {
+        background: rgba(129, 140, 248, 0.12);
+        color: #c7d2fe;
+    }
+    .feature-tag.orange {
+        background: rgba(245, 158, 11, 0.12);
+        color: #fde68a;
+    }
+    .feature-tag.green {
+        background: rgba(34, 197, 94, 0.12);
+        color: #bbf7d0;
+    }
+    .feature-tag.cyan {
+        background: rgba(6, 182, 212, 0.12);
+        color: #a5f3fc;
     }
     .feature-name {
-        font-size: 1.1rem;
-        font-weight: 600;
+        font-size: 1.35rem;
+        font-weight: 700;
         color: white;
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.75rem;
     }
     .feature-desc {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         color: rgba(255,255,255,0.55);
-        line-height: 1.7;
+        line-height: 1.8;
+    }
+    .feature-preview {
+        flex: 1;
+        min-width: 0;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.03);
+    }
+    .feature-preview img {
+        width: 100%;
+        height: auto;
+        display: block;
+        transition: transform 0.3s;
+    }
+    .feature-row:hover .feature-preview img {
+        transform: scale(1.03);
     }
     
     /* ===== 工作区 ===== */
@@ -433,7 +463,7 @@ st.markdown("""
         border-top: 1px solid rgba(255,255,255,0.05);
     }
     .workspace-header {
-        text-align: center;
+        text-align: left;
         max-width: 1200px;
         margin: 0 auto 2rem auto;
     }
@@ -442,10 +472,14 @@ st.markdown("""
         font-weight: 700;
         color: white;
         margin-bottom: 0.5rem;
+        padding-left: 1rem;
+        border-left: 4px solid #4f46e5;
+        background: linear-gradient(90deg, rgba(79, 70, 229, 0.15) 0%, transparent 100%);
     }
     .workspace-subtitle {
         font-size: 0.9rem;
         color: rgba(255,255,255,0.5);
+        padding-left: 1.25rem;
     }
     .workspace-grid {
         display: grid;
@@ -462,23 +496,46 @@ st.markdown("""
         border-radius: 20px;
         padding: 1.75rem;
         height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+    .input-panel::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 100%);
     }
     .input-panel-title {
-        font-size: 1.1rem;
-        font-weight: 600;
+        font-size: 1.15rem;
+        font-weight: 700;
         color: white;
         margin-bottom: 1.5rem;
         padding-bottom: 1rem;
+        padding-left: 1rem;
         border-bottom: 1px solid rgba(255,255,255,0.1);
         display: flex;
         align-items: center;
         gap: 0.6rem;
+    }
+    .input-panel-title .icon {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.25rem;
     }
     .form-label {
         font-size: 0.78rem;
         font-weight: 500;
         color: rgba(255,255,255,0.75);
         margin-bottom: 0.4rem;
+    }
+    .form-label strong {
+        color: #818cf8;
+        font-weight: 600;
     }
     .form-input {
         margin-bottom: 1rem;
@@ -488,22 +545,43 @@ st.markdown("""
         color: rgba(255,255,255,0.35);
         margin-top: 0.2rem;
     }
-    .generate-btn {
+    .input-panel [data-baseweb="slider"] [data-testid="stTickBarMin"],
+    .input-panel [data-baseweb="slider"] [data-testid="stTickBarMax"] {
+        color: rgba(255,255,255,0.5) !important;
+    }
+    .input-panel [data-baseweb="slider"] [role="slider"] {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        border-color: #4f46e5 !important;
+    }
+    .input-panel [data-baseweb="slider"] [data-testid="stThumbValue"] {
+        color: #818cf8 !important;
+        font-weight: 600 !important;
+    }
+    .input-panel .stButton > button {
         background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
         color: white !important;
         border: none !important;
         border-radius: 10px !important;
         padding: 0.85rem !important;
         font-size: 0.95rem !important;
-        font-weight: 500 !important;
+        font-weight: 600 !important;
         width: 100% !important;
         cursor: pointer !important;
         transition: all 0.2s !important;
         box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35) !important;
     }
-    .generate-btn:hover {
+    .input-panel .stButton > button:hover {
         background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%) !important;
         box-shadow: 0 6px 22px rgba(79, 70, 229, 0.45) !important;
+        transform: translateY(-1px);
+    }
+    .input-panel .stButton > button:active {
+        transform: translateY(0);
+    }
+    .input-panel .stButton > button:disabled {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        opacity: 0.6;
+        cursor: not-allowed !important;
     }
     
     /* 右侧预览区 */
@@ -1099,71 +1177,52 @@ st.html("""
 """)
 
 # ============================================================
-# 功能模块展示 - 卡片网格
+# 功能模块展示 - 左右交替布局
 # ============================================================
-st.html("""
+st.html(f"""
 <div class="features-section" id="features">
     <div class="features-header">
         <div class="features-title">覆盖全链路培训需求</div>
         <div class="features-subtitle">从课程规划到效果评估，一站式生成完整培训方案</div>
     </div>
-    <div class="features-grid">
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="8" y="6" width="32" height="36" rx="4" fill="rgba(129,140,248,0.15)" stroke="#818cf8" stroke-width="2"/>
-                    <rect x="14" y="14" width="20" height="3" rx="1.5" fill="#818cf8"/>
-                    <rect x="14" y="22" width="16" height="2.5" rx="1.25" fill="rgba(129,140,248,0.6)"/>
-                    <rect x="14" y="28" width="18" height="2.5" rx="1.25" fill="rgba(129,140,248,0.4)"/>
-                    <rect x="14" y="34" width="12" height="2.5" rx="1.25" fill="rgba(129,140,248,0.4)"/>
-                </svg>
-            </div>
+    <div class="feature-row">
+        <div class="feature-content">
+            <div class="feature-tag blue">智能生成</div>
             <div class="feature-name">课程大纲自动构建</div>
-            <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配。</div>
+            <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配，让培训体系清晰可控。</div>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="6" y="10" width="36" height="28" rx="4" fill="rgba(245,158,11,0.15)" stroke="#f59e0b" stroke-width="2"/>
-                    <rect x="11" y="16" width="26" height="4" rx="2" fill="#f59e0b"/>
-                    <rect x="11" y="24" width="20" height="2.5" rx="1.25" fill="rgba(245,158,11,0.6)"/>
-                    <rect x="11" y="29" width="24" height="2.5" rx="1.25" fill="rgba(245,158,11,0.4)"/>
-                    <circle cx="37" cy="32" r="6" fill="#4f46e5"/>
-                    <path d="M34 32l2 2 4-4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-            </div>
+        <div class="feature-preview">
+            <img src="data:image/png;base64,{FEATURE_IMAGES['outline']}" alt="课程大纲自动构建">
+        </div>
+    </div>
+    <div class="feature-row reverse">
+        <div class="feature-content">
+            <div class="feature-tag orange">一键输出</div>
             <div class="feature-name">培训 PPT 即开即用</div>
-            <div class="feature-desc">自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结。</div>
+            <div class="feature-desc">自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结，可直接用于现场培训。</div>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="4" y="8" width="40" height="32" rx="4" fill="rgba(34,197,94,0.15)" stroke="#22c55e" stroke-width="2"/>
-                    <circle cx="24" cy="24" r="10" fill="none" stroke="#22c55e" stroke-width="3" stroke-dasharray="40 63" stroke-linecap="round"/>
-                    <text x="24" y="27" font-size="10" font-weight="700" fill="#22c55e" text-anchor="middle" font-family="system-ui,sans-serif">86</text>
-                    <rect x="34" y="12" width="6" height="12" rx="1" fill="rgba(129,140,248,0.5)"/>
-                    <rect x="42" y="16" width="6" height="8" rx="1" fill="rgba(192,132,252,0.5)"/>
-                </svg>
-            </div>
+        <div class="feature-preview">
+            <img src="data:image/png;base64,{FEATURE_IMAGES['ppt']}" alt="培训 PPT 即开即用">
+        </div>
+    </div>
+    <div class="feature-row">
+        <div class="feature-content">
+            <div class="feature-tag green">多维度</div>
             <div class="feature-name">智能考核与评估</div>
-            <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助评估培训效果。</div>
+            <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助培训管理者科学评估培训效果。</div>
         </div>
-        <div class="feature-card">
-            <div class="feature-icon">
-                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="6" y="8" width="36" height="26" rx="4" fill="rgba(6,182,212,0.15)" stroke="#06b6d4" stroke-width="2"/>
-                    <rect x="6" y="8" width="36" height="5" rx="4" fill="rgba(255,255,255,0.1)"/>
-                    <circle cx="11" cy="10.5" r="1.5" fill="#ef4444"/>
-                    <circle cx="15" cy="10.5" r="1.5" fill="#f59e0b"/>
-                    <circle cx="19" cy="10.5" r="1.5" fill="#22c55e"/>
-                    <rect x="12" y="18" width="12" height="10" rx="2" fill="rgba(79,70,229,0.25)"/>
-                    <rect x="28" y="18" width="10" height="2.5" rx="1.25" fill="rgba(255,255,255,0.2)"/>
-                    <rect x="28" y="23" width="8" height="2.5" rx="1.25" fill="rgba(255,255,255,0.12)"/>
-                    <rect x="14" y="38" width="20" height="4" rx="2" fill="rgba(255,255,255,0.15)"/>
-                </svg>
-            </div>
+        <div class="feature-preview">
+            <img src="data:image/png;base64,{FEATURE_IMAGES['assessment']}" alt="智能考核与评估">
+        </div>
+    </div>
+    <div class="feature-row reverse">
+        <div class="feature-content">
+            <div class="feature-tag cyan">实战导向</div>
             <div class="feature-name">实操场景化练习</div>
-            <div class="feature-desc">根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中掌握核心功能。</div>
+            <div class="feature-desc">根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中快速掌握核心功能。</div>
+        </div>
+        <div class="feature-preview">
+            <img src="data:image/png;base64,{FEATURE_IMAGES['practice']}" alt="实操场景化练习">
         </div>
     </div>
 </div>
@@ -1216,7 +1275,7 @@ if not st.session_state.api_key:
         </div>
         <div class="footer-bottom">
             <div class="footer-copyright">© 2026 AI培训设计器</div>
-            <div class="footer-copyright">v4.9 | 由 ChelseaPYC 构建</div>
+            <div class="footer-copyright">v5.1 | 由 ChelseaPYC 构建</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1228,7 +1287,7 @@ with left_col:
     # 左侧输入面板
     st.markdown("""
     <div class="input-panel">
-        <div class="input-panel-title">📝 培训信息</div>
+        <div class="input-panel-title"><span class="icon">📝</span> 培训信息</div>
     """, unsafe_allow_html=True)
     
     st.markdown('<div class="form-label">产品名称</div>', unsafe_allow_html=True)
@@ -1443,7 +1502,7 @@ st.markdown("""
     </div>
         <div class="footer-bottom">
             <div class="footer-copyright">© 2026 AI培训设计器</div>
-            <div class="footer-copyright">v4.9 | 由 ChelseaPYC 构建</div>
+            <div class="footer-copyright">v5.1 | 由 ChelseaPYC 构建</div>
         </div>
     </div>
 """, unsafe_allow_html=True)

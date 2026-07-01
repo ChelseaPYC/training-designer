@@ -6,7 +6,7 @@ import base64
 from pathlib import Path
 
 # ============================================================
-# 图片资源转 Base64（用于 HTML 内嵌显示）
+# 图片资源 - Base64 嵌入（每张 < 200KB，已压缩到 480px 宽度）
 # ============================================================
 def img_to_base64(filename):
     img_path = Path(__file__).parent / "images" / filename
@@ -124,33 +124,44 @@ st.markdown("""
         cursor: not-allowed !important;
     }
     
-    /* Select Slider - 全局蓝紫色 track + thumb */
+    /* Select Slider - 强制全局蓝紫色（覆盖所有内部元素） */
     [data-baseweb="slider"] [role="slider"] {
         background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
         border: 2px solid #0a0e17 !important;
-        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3) !important;
+        box-shadow: 0 0 0 1px #4f46e5, 0 2px 8px rgba(79, 70, 229, 0.4) !important;
     }
-    [data-baseweb="slider"] .st-cx6aqv,
-    [data-baseweb="slider"] .st-ef3g0q {
-        background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
+    /* Thumb value label (the number above the slider) */
+    [data-baseweb="slider"] [data-testid="stThumbValue"] {
+        color: #818cf8 !important;
+        font-weight: 700 !important;
     }
-    /* Slider track active bar (filled portion) */
-    [data-baseweb="slider"] > div > div > div > div:nth-child(1) {
-        background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
+    [data-baseweb="slider"] [data-testid="stThumbValue"] * {
+        color: #818cf8 !important;
     }
-    /* Slider track inactive bar (unfilled portion) */
-    [data-baseweb="slider"] > div > div > div > div:nth-child(2) {
-        background: rgba(255,255,255,0.15) !important;
+    /* Slider track - filled portion */
+    [data-baseweb="slider"] [role="progressbar"],
+    [data-baseweb="slider"] [data-testid="stSliderActiveTrack"],
+    [data-baseweb="slider"] > div > div > div > div:first-child {
+        background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
     }
-    /* Slider tick bar min/max labels */
+    /* Slider track - unfilled portion */
+    [data-baseweb="slider"] [data-testid="stSliderInactiveTrack"],
+    [data-baseweb="slider"] > div > div > div > div:last-child {
+        background: rgba(255,255,255,0.12) !important;
+    }
+    /* All slider child divs that look like rails */
+    [data-baseweb="slider"] div[style*="background-color"] {
+        background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
+    }
+    /* Slider min/max labels */
     [data-baseweb="slider"] [data-testid="stTickBarMin"],
     [data-baseweb="slider"] [data-testid="stTickBarMax"] {
         color: rgba(255,255,255,0.5) !important;
     }
-    /* Slider value label */
-    [data-baseweb="slider"] [data-testid="stThumbValue"] {
-        color: #818cf8 !important;
-        font-weight: 600 !important;
+    /* Number markers under slider (1, 2, 3 ... 10) */
+    [data-baseweb="slider"] [data-testid="stTickBar"] span,
+    [data-baseweb="slider"] [data-testid="stTickBar"] {
+        color: rgba(199, 210, 254, 0.7) !important;
     }
     
     .main .block-container {
@@ -259,18 +270,32 @@ st.markdown("""
         align-items: center;
         justify-content: center;
     }
+    .hero-eyebrow {
+        display: inline-block;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #818cf8;
+        padding: 0.4rem 0.85rem;
+        background: rgba(79, 70, 229, 0.12);
+        border: 1px solid rgba(129, 140, 248, 0.25);
+        border-radius: 999px;
+        margin-bottom: 1.25rem;
+    }
     .hero-title {
-        font-size: 3.2rem;
+        font-size: 3rem;
         font-weight: 800;
         margin-bottom: 1.25rem;
-        line-height: 1.15;
+        line-height: 1.2;
         color: white;
         position: relative;
         letter-spacing: -0.03em;
         text-shadow: 0 0 40px rgba(79, 70, 229, 0.3);
+        white-space: nowrap;
     }
     .hero-title .highlight {
-        background: linear-gradient(135deg, #818cf8 0%, #22d3ee 100%);
+        background: linear-gradient(135deg, #818cf8 0%, #c4b5fd 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -285,10 +310,40 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
     .hero-buttons {
-        margin-top: 1.5rem;
+        margin-top: 1.75rem;
         display: flex;
         gap: 1rem;
         position: relative;
+    }
+    .hero-stats {
+        margin-top: 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        position: relative;
+    }
+    .hero-stat {
+        display: flex;
+        flex-direction: column;
+    }
+    .hero-stat-num {
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #818cf8 0%, #c4b5fd 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        line-height: 1.2;
+    }
+    .hero-stat-label {
+        font-size: 0.75rem;
+        color: rgba(255,255,255,0.45);
+        margin-top: 0.2rem;
+    }
+    .hero-stat-divider {
+        width: 1px;
+        height: 32px;
+        background: rgba(129, 140, 248, 0.2);
     }
     .hero-btn-primary {
         background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
@@ -466,22 +521,8 @@ st.markdown("""
         font-size: 0.72rem;
         font-weight: 600;
         margin-bottom: 0.75rem;
-    }
-    .feature-tag.blue {
         background: rgba(129, 140, 248, 0.12);
         color: #c7d2fe;
-    }
-    .feature-tag.orange {
-        background: rgba(245, 158, 11, 0.12);
-        color: #fde68a;
-    }
-    .feature-tag.green {
-        background: rgba(34, 197, 94, 0.12);
-        color: #bbf7d0;
-    }
-    .feature-tag.cyan {
-        background: rgba(6, 182, 212, 0.12);
-        color: #a5f3fc;
     }
     .feature-name {
         font-size: 1.35rem;
@@ -547,15 +588,16 @@ st.markdown("""
         margin: 0 auto;
     }
 
-    /* 左侧输入区 */
+    /* 左侧输入区 - 统一蓝紫高端风格 */
     .input-panel {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
+        background: linear-gradient(180deg, rgba(79, 70, 229, 0.08) 0%, rgba(124, 58, 237, 0.05) 100%), rgba(255,255,255,0.03);
+        border: 1px solid rgba(129, 140, 248, 0.2);
         border-radius: 20px;
         padding: 1.75rem;
         height: 100%;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 4px 24px rgba(79, 70, 229, 0.08);
     }
     .input-panel::before {
         content: '';
@@ -573,7 +615,7 @@ st.markdown("""
         margin-bottom: 1.5rem;
         padding-bottom: 1rem;
         padding-left: 1rem;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(129, 140, 248, 0.15);
         display: flex;
         align-items: center;
         gap: 0.6rem;
@@ -603,16 +645,17 @@ st.markdown("""
         color: rgba(255,255,255,0.35);
         margin-top: 0.2rem;
     }
-    
-    /* 右侧预览区 - 与左侧输入区风格统一 */
+
+    /* 右侧预览区 - 与左侧输入区风格完全统一 */
     .preview-panel {
-        background: rgba(255,255,255,0.05);
-        border: 1px solid rgba(255,255,255,0.1);
+        background: linear-gradient(180deg, rgba(79, 70, 229, 0.08) 0%, rgba(124, 58, 237, 0.05) 100%), rgba(255,255,255,0.03);
+        border: 1px solid rgba(129, 140, 248, 0.2);
         border-radius: 20px;
         padding: 1.75rem;
         height: 100%;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 4px 24px rgba(79, 70, 229, 0.08);
     }
     .preview-panel::before {
         content: '';
@@ -630,7 +673,7 @@ st.markdown("""
         margin-bottom: 1.5rem;
         padding-bottom: 1rem;
         padding-left: 1rem;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid rgba(129, 140, 248, 0.15);
         display: flex;
         align-items: center;
         gap: 0.6rem;
@@ -1113,11 +1156,28 @@ st.html("""
 <div class="hero-section">
     <div class="hero-container">
         <div class="hero-content">
-            <div class="hero-title">从产品到培训，<br><span class="highlight">一步到位</span></div>
+            <div class="hero-eyebrow">AI-Powered Training Design</div>
+            <h1 class="hero-title">从产品到培训，<span class="highlight">一步到位</span></h1>
             <div class="hero-subtitle">只需输入产品信息，描述核心功能与场景，即可自动生成全套培训方案，从蓝图到1V1点评，让产品培训事半功倍。</div>
             <div class="hero-buttons">
                 <a href="#workspace" class="hero-btn-primary">立即体验</a>
                 <a href="#features" class="hero-btn-secondary">了解功能</a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="hero-stat-num">6+</div>
+                    <div class="hero-stat-label">输出模块</div>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <div class="hero-stat-num">10天</div>
+                    <div class="hero-stat-label">培训周期</div>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <div class="hero-stat-num">3分钟</div>
+                    <div class="hero-stat-label">生成全套方案</div>
+                </div>
             </div>
         </div>
         <div class="hero-graphic">
@@ -1132,24 +1192,24 @@ st.html("""
                         <stop offset="100%" style="stop-color:rgba(255,255,255,0.05)"/>
                     </linearGradient>
                     <linearGradient id="dash-accent" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:#22d3ee"/>
-                        <stop offset="100%" style="stop-color:#818cf8"/>
+                        <stop offset="0%" style="stop-color:#4f46e5"/>
+                        <stop offset="100%" style="stop-color:#7c3aed"/>
                     </linearGradient>
                 </defs>
                 <rect width="480" height="320" rx="24" fill="url(#dash-board-bg)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
                 <rect x="24" y="24" width="432" height="48" rx="12" fill="url(#dash-card)"/>
-                <circle cx="52" cy="48" r="10" fill="#4f46e5"/>
+                <circle cx="52" cy="48" r="10" fill="url(#dash-accent)"/>
                 <rect x="72" y="42" width="140" height="8" rx="4" fill="rgba(255,255,255,0.35)"/>
                 <rect x="72" y="54" width="100" height="5" rx="2.5" fill="rgba(255,255,255,0.15)"/>
-                <rect x="360" y="40" width="80" height="16" rx="8" fill="rgba(34,197,94,0.25)"/>
+                <rect x="360" y="40" width="80" height="16" rx="8" fill="rgba(79,70,229,0.3)"/>
                 <rect x="24" y="88" width="200" height="208" rx="16" fill="url(#dash-card)"/>
                 <rect x="44" y="112" width="100" height="8" rx="4" fill="rgba(255,255,255,0.4)"/>
                 <rect x="44" y="132" width="160" height="4" rx="2" fill="rgba(255,255,255,0.12)"/>
-                <rect x="44" y="156" width="14" height="14" rx="4" fill="#4f46e5"/>
+                <rect x="44" y="156" width="14" height="14" rx="4" fill="url(#dash-accent)"/>
                 <rect x="66" y="160" width="120" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
-                <rect x="44" y="184" width="14" height="14" rx="4" fill="#22c55e"/>
+                <rect x="44" y="184" width="14" height="14" rx="4" fill="url(#dash-accent)" opacity="0.7"/>
                 <rect x="66" y="188" width="130" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
-                <rect x="44" y="212" width="14" height="14" rx="4" fill="#f59e0b"/>
+                <rect x="44" y="212" width="14" height="14" rx="4" fill="url(#dash-accent)" opacity="0.5"/>
                 <rect x="66" y="216" width="110" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
                 <rect x="44" y="240" width="14" height="14" rx="4" fill="rgba(255,255,255,0.15)"/>
                 <rect x="66" y="244" width="125" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
@@ -1213,56 +1273,69 @@ st.html("""
 """)
 
 # ============================================================
-# 功能模块展示 - 左右交替布局
+# 功能模块展示 - 左右交替布局（拆分成 5 次独立渲染，避免大 HTML 字符串被截断）
 # ============================================================
-st.html(f"""
+st.html("""
 <div class="features-section" id="features">
     <div class="features-header">
         <div class="features-title">覆盖全链路培训需求</div>
         <div class="features-subtitle">从课程规划到效果评估，一站式生成完整培训方案</div>
     </div>
-    <div class="feature-row">
-        <div class="feature-content">
-            <div class="feature-tag blue">智能生成</div>
-            <div class="feature-name">课程大纲自动构建</div>
-            <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配，让培训体系清晰可控。</div>
-        </div>
-        <div class="feature-preview">
-            <img src="data:image/png;base64,{FEATURE_IMAGES['outline']}" alt="课程大纲自动构建">
-        </div>
+""")
+
+st.html(f"""
+<div class="feature-row">
+    <div class="feature-content">
+        <div class="feature-tag">智能生成</div>
+        <div class="feature-name">课程大纲自动构建</div>
+        <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配，让培训体系清晰可控。</div>
     </div>
-    <div class="feature-row reverse">
-        <div class="feature-content">
-            <div class="feature-tag orange">一键输出</div>
-            <div class="feature-name">培训 PPT 即开即用</div>
-            <div class="feature-desc">自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结，可直接用于现场培训。</div>
-        </div>
-        <div class="feature-preview">
-            <img src="data:image/png;base64,{FEATURE_IMAGES['ppt']}" alt="培训 PPT 即开即用">
-        </div>
-    </div>
-    <div class="feature-row">
-        <div class="feature-content">
-            <div class="feature-tag green">多维度</div>
-            <div class="feature-name">智能考核与评估</div>
-            <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助培训管理者科学评估培训效果。</div>
-        </div>
-        <div class="feature-preview">
-            <img src="data:image/png;base64,{FEATURE_IMAGES['assessment']}" alt="智能考核与评估">
-        </div>
-    </div>
-    <div class="feature-row reverse">
-        <div class="feature-content">
-            <div class="feature-tag cyan">实战导向</div>
-            <div class="feature-name">实操场景化练习</div>
-            <div class="feature-desc">根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中快速掌握核心功能。</div>
-        </div>
-        <div class="feature-preview">
-            <img src="data:image/png;base64,{FEATURE_IMAGES['practice']}" alt="实操场景化练习">
-        </div>
+    <div class="feature-preview">
+        <img src="data:image/png;base64,{FEATURE_IMAGES['outline']}" alt="课程大纲自动构建">
     </div>
 </div>
 """)
+
+st.html(f"""
+<div class="feature-row reverse">
+    <div class="feature-content">
+        <div class="feature-tag">一键输出</div>
+        <div class="feature-name">培训 PPT 即开即用</div>
+        <div class="feature-desc">自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结，可直接用于现场培训。</div>
+    </div>
+    <div class="feature-preview">
+        <img src="data:image/png;base64,{FEATURE_IMAGES['ppt']}" alt="培训 PPT 即开即用">
+    </div>
+</div>
+""")
+
+st.html(f"""
+<div class="feature-row">
+    <div class="feature-content">
+        <div class="feature-tag">多维度</div>
+        <div class="feature-name">智能考核与评估</div>
+        <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助培训管理者科学评估培训效果。</div>
+    </div>
+    <div class="feature-preview">
+        <img src="data:image/png;base64,{FEATURE_IMAGES['assessment']}" alt="智能考核与评估">
+    </div>
+</div>
+""")
+
+st.html(f"""
+<div class="feature-row reverse">
+    <div class="feature-content">
+        <div class="feature-tag">实战导向</div>
+        <div class="feature-name">实操场景化练习</div>
+        <div class="feature-desc">根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中快速掌握核心功能。</div>
+    </div>
+    <div class="feature-preview">
+        <img src="data:image/png;base64,{FEATURE_IMAGES['practice']}" alt="实操场景化练习">
+    </div>
+</div>
+""")
+
+st.html("</div>")
 
 # ============================================================
 # 生成工作区（左右分栏）
@@ -1311,7 +1384,7 @@ if not st.session_state.api_key:
         </div>
         <div class="footer-bottom">
             <div class="footer-copyright">© 2026 AI培训设计器</div>
-            <div class="footer-copyright">v5.2 | 由 ChelseaPYC 构建</div>
+            <div class="footer-copyright">v5.3 | 由 ChelseaPYC 构建</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1538,7 +1611,7 @@ st.markdown("""
     </div>
         <div class="footer-bottom">
             <div class="footer-copyright">© 2026 AI培训设计器</div>
-            <div class="footer-copyright">v5.2 | 由 ChelseaPYC 构建</div>
+            <div class="footer-copyright">v5.3 | 由 ChelseaPYC 构建</div>
         </div>
     </div>
 </div>

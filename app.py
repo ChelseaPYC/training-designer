@@ -124,44 +124,59 @@ st.markdown("""
         cursor: not-allowed !important;
     }
     
-    /* Select Slider - 强制全局蓝紫色（覆盖所有内部元素） */
+    /* Slider - 全局蓝紫色（去掉 Streamlit 默认红色，覆盖所有内部元素） */
+    /* 滑块圆点 */
     [data-baseweb="slider"] [role="slider"] {
         background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
         border: 2px solid #0a0e17 !important;
         box-shadow: 0 0 0 1px #4f46e5, 0 2px 8px rgba(79, 70, 229, 0.4) !important;
     }
-    /* Thumb value label (the number above the slider) */
-    [data-baseweb="slider"] [data-testid="stThumbValue"] {
+    /* 滑块上方数值标签 */
+    [data-baseweb="slider"] [data-testid="stThumbValue"],
+    [data-baseweb="slider"] [data-testid="stThumbValue"] * {
         color: #818cf8 !important;
         font-weight: 700 !important;
     }
-    [data-baseweb="slider"] [data-testid="stThumbValue"] * {
-        color: #818cf8 !important;
-    }
-    /* Slider track - filled portion */
+    /* 已填充轨道 */
     [data-baseweb="slider"] [role="progressbar"],
     [data-baseweb="slider"] [data-testid="stSliderActiveTrack"],
     [data-baseweb="slider"] > div > div > div > div:first-child {
         background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
     }
-    /* Slider track - unfilled portion */
+    /* 未填充轨道 */
     [data-baseweb="slider"] [data-testid="stSliderInactiveTrack"],
     [data-baseweb="slider"] > div > div > div > div:last-child {
         background: rgba(255,255,255,0.12) !important;
     }
-    /* All slider child divs that look like rails */
-    [data-baseweb="slider"] div[style*="background-color"] {
+    /* 轨道上任何带 background-color 的内联样式（覆盖 Streamlit 默认红色） */
+    [data-baseweb="slider"] div[style*="background"] {
         background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
     }
-    /* Slider min/max labels */
+    [data-baseweb="slider"] span[style*="background"] {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+    }
+    /* 最小/最大值标签 */
     [data-baseweb="slider"] [data-testid="stTickBarMin"],
     [data-baseweb="slider"] [data-testid="stTickBarMax"] {
         color: rgba(255,255,255,0.5) !important;
     }
-    /* Number markers under slider (1, 2, 3 ... 10) */
+    /* 刻度数字 (1, 2, 3 ... 10) - 使用主题色 */
     [data-baseweb="slider"] [data-testid="stTickBar"] span,
-    [data-baseweb="slider"] [data-testid="stTickBar"] {
-        color: rgba(199, 210, 254, 0.7) !important;
+    [data-baseweb="slider"] [data-testid="stTickBar"],
+    [data-baseweb="slider"] [data-testid="stTickBar"] * {
+        color: #a5b4fc !important;
+        font-weight: 600 !important;
+    }
+    /* select_slider 容器背景 */
+    [data-baseweb="slider"] {
+        background: transparent !important;
+    }
+    /* 防止任何红色 #ff4b4b 出现 */
+    [data-baseweb="slider"] *[style*="rgb(255, 75, 75)"],
+    [data-baseweb="slider"] *[style*="#ff4b4b"],
+    [data-baseweb="slider"] *[style*="255, 75, 75"] {
+        background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
+        color: #a5b4fc !important;
     }
     
     .main .block-container {
@@ -204,7 +219,7 @@ st.markdown("""
         content: '';
         width: 28px;
         height: 28px;
-        background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
         border-radius: 8px;
         display: inline-block;
         box-shadow: 0 4px 12px rgba(79, 70, 229, 0.35);
@@ -450,7 +465,7 @@ st.markdown("""
         justify-content: center;
         width: 44px;
         height: 44px;
-        background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
         color: white;
         border-radius: 12px;
         font-size: 1.1rem;
@@ -586,6 +601,30 @@ st.markdown("""
         gap: 1.5rem;
         max-width: 1200px;
         margin: 0 auto;
+    }
+    
+    /* 工作区列面板 - 确保 Streamlit 列内容也被包裹在面板背景中 */
+    .workspace-grid .stHorizontalBlock,
+    .workspace-grid [data-testid="stHorizontalBlock"] {
+        display: contents !important;
+    }
+    .workspace-grid [data-testid="column"] {
+        background: linear-gradient(180deg, rgba(79, 70, 229, 0.08) 0%, rgba(124, 58, 237, 0.05) 100%), rgba(255,255,255,0.03) !important;
+        border: 1px solid rgba(129, 140, 248, 0.2) !important;
+        border-radius: 20px !important;
+        padding: 1.75rem !important;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(79, 70, 229, 0.08) !important;
+    }
+    .workspace-grid [data-testid="column"]::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 100%);
     }
 
     /* 左侧输入区 - 统一蓝紫高端风格 */
@@ -1156,28 +1195,11 @@ st.html("""
 <div class="hero-section">
     <div class="hero-container">
         <div class="hero-content">
-            <div class="hero-eyebrow">AI-Powered Training Design</div>
-            <h1 class="hero-title">从产品到培训，<span class="highlight">一步到位</span></h1>
+            <h1 class="hero-title">从产品到培训，一步到位</h1>
             <div class="hero-subtitle">只需输入产品信息，描述核心功能与场景，即可自动生成全套培训方案，从蓝图到1V1点评，让产品培训事半功倍。</div>
             <div class="hero-buttons">
                 <a href="#workspace" class="hero-btn-primary">立即体验</a>
                 <a href="#features" class="hero-btn-secondary">了解功能</a>
-            </div>
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <div class="hero-stat-num">6+</div>
-                    <div class="hero-stat-label">输出模块</div>
-                </div>
-                <div class="hero-stat-divider"></div>
-                <div class="hero-stat">
-                    <div class="hero-stat-num">10天</div>
-                    <div class="hero-stat-label">培训周期</div>
-                </div>
-                <div class="hero-stat-divider"></div>
-                <div class="hero-stat">
-                    <div class="hero-stat-num">3分钟</div>
-                    <div class="hero-stat-label">生成全套方案</div>
-                </div>
             </div>
         </div>
         <div class="hero-graphic">
@@ -1283,7 +1305,7 @@ st.html("""
     </div>
 """)
 
-st.html(f"""
+st.markdown(f"""
 <div class="feature-row">
     <div class="feature-content">
         <div class="feature-tag">智能生成</div>
@@ -1294,9 +1316,9 @@ st.html(f"""
         <img src="data:image/png;base64,{FEATURE_IMAGES['outline']}" alt="课程大纲自动构建">
     </div>
 </div>
-""")
+""", unsafe_allow_html=True)
 
-st.html(f"""
+st.markdown(f"""
 <div class="feature-row reverse">
     <div class="feature-content">
         <div class="feature-tag">一键输出</div>
@@ -1307,9 +1329,9 @@ st.html(f"""
         <img src="data:image/png;base64,{FEATURE_IMAGES['ppt']}" alt="培训 PPT 即开即用">
     </div>
 </div>
-""")
+""", unsafe_allow_html=True)
 
-st.html(f"""
+st.markdown(f"""
 <div class="feature-row">
     <div class="feature-content">
         <div class="feature-tag">多维度</div>
@@ -1320,9 +1342,9 @@ st.html(f"""
         <img src="data:image/png;base64,{FEATURE_IMAGES['assessment']}" alt="智能考核与评估">
     </div>
 </div>
-""")
+""", unsafe_allow_html=True)
 
-st.html(f"""
+st.markdown(f"""
 <div class="feature-row reverse">
     <div class="feature-content">
         <div class="feature-tag">实战导向</div>
@@ -1333,7 +1355,7 @@ st.html(f"""
         <img src="data:image/png;base64,{FEATURE_IMAGES['practice']}" alt="实操场景化练习">
     </div>
 </div>
-""")
+""", unsafe_allow_html=True)
 
 st.html("</div>")
 
@@ -1393,10 +1415,9 @@ if not st.session_state.api_key:
 left_col, right_col = st.columns([1, 1])
 
 with left_col:
-    # 左侧输入面板
+    # 左侧输入面板标题
     st.markdown("""
-    <div class="input-panel">
-        <div class="input-panel-title"><span class="icon">📝</span> 培训信息</div>
+    <div class="input-panel-title"><span class="icon">📝</span> 培训信息</div>
     """, unsafe_allow_html=True)
     
     st.markdown('<div class="form-label">产品名称</div>', unsafe_allow_html=True)
@@ -1460,7 +1481,6 @@ with left_col:
         disabled=st.session_state.is_generating
     )
     st.markdown("</div>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
     
     if generate_clicked:
         if not product_name:
@@ -1476,10 +1496,9 @@ with left_col:
             st.rerun()
 
 with right_col:
-    # 右侧预览面板
+    # 右侧预览面板标题
     st.markdown("""
-    <div class="preview-panel">
-        <div class="preview-panel-title"><span class="icon">👁️</span> 生成预览</div>
+    <div class="preview-panel-title"><span class="icon">👁️</span> 生成预览</div>
     """, unsafe_allow_html=True)
     
     # 生成过程
@@ -1563,7 +1582,6 @@ with right_col:
             </div>
             """, unsafe_allow_html=True)
     
-    st.markdown("</div>", unsafe_allow_html=True)
 
 st.markdown("</div></div>", unsafe_allow_html=True)
 

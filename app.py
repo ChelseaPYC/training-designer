@@ -2,6 +2,26 @@ import streamlit as st
 import requests
 import json
 import time
+import base64
+from pathlib import Path
+
+# ============================================================
+# 功能卡片图片 - Base64 内嵌（图片已压缩至 ~10-17KB JPEG，总计 ~69KB）
+# 解决 Streamlit Cloud 上 st.image() 的 MediaFileStorageError
+# ============================================================
+@st.cache_data
+def load_feature_image(filename: str) -> str:
+    img_path = Path(__file__).parent / "images" / filename
+    if img_path.exists():
+        return base64.b64encode(img_path.read_bytes()).decode()
+    return ""
+
+FEATURE_IMAGES = {
+    "outline": load_feature_image("feature-outline.jpg"),
+    "ppt": load_feature_image("feature-ppt.jpg"),
+    "assessment": load_feature_image("feature-assessment.jpg"),
+    "practice": load_feature_image("feature-practice.jpg"),
+}
 
 # ============================================================
 # 配置区：默认 API Key（通过 Streamlit Secrets 配置，用户无需手动设置）
@@ -1312,13 +1332,17 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-def _feature_row(name, tag, desc, image_path, reverse=False):
+def _feature_row(name, tag, desc, image_key, reverse=False):
     """渲染一行功能模块：左侧内容 + 右侧图片（reverse 时互换）"""
     content_html = f"""
     <div class="feature-tag">{tag}</div>
     <div class="feature-name">{name}</div>
     <div class="feature-desc">{desc}</div>
     """
+    # 用 base64 内嵌图片，避免 st.image() 在 Streamlit Cloud 上的 MediaFileStorageError
+    img_b64 = FEATURE_IMAGES.get(image_key, "")
+    img_html = f'<img src="data:image/jpeg;base64,{img_b64}" alt="{name}">' if img_b64 else '<div class="img-placeholder">图片加载中</div>'
+
     if reverse:
         c_img, c_text = st.columns([45, 55], gap="large")
     else:
@@ -1326,20 +1350,20 @@ def _feature_row(name, tag, desc, image_path, reverse=False):
     with c_text:
         st.markdown(f'<div class="feature-content">{content_html}</div>', unsafe_allow_html=True)
     with c_img:
-        st.image(image_path, use_container_width=True)
+        st.markdown(f'<div class="feature-preview">{img_html}</div>', unsafe_allow_html=True)
 
 _feature_row(
     "课程大纲自动构建",
     "智能生成",
     "基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配，让培训体系清晰可控。",
-    "images/feature-outline.jpg",
+    "outline",
 )
 
 _feature_row(
     "培训 PPT 即开即用",
     "一键输出",
     "自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结，可直接用于现场培训。",
-    "images/feature-ppt.jpg",
+    "ppt",
     reverse=True,
 )
 
@@ -1347,14 +1371,14 @@ _feature_row(
     "智能考核与评估",
     "多维度",
     "生成多类型考核题目，支持自动评分和成绩分析，帮助培训管理者科学评估培训效果。",
-    "images/feature-assessment.jpg",
+    "assessment",
 )
 
 _feature_row(
     "实操场景化练习",
     "实战导向",
     "根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中快速掌握核心功能。",
-    "images/feature-practice.jpg",
+    "practice",
     reverse=True,
 )
 

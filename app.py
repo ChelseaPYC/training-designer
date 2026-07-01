@@ -2,24 +2,6 @@ import streamlit as st
 import requests
 import json
 import time
-import base64
-from pathlib import Path
-
-# ============================================================
-# 图片资源 - Base64 嵌入（每张 < 200KB，已压缩到 480px 宽度）
-# ============================================================
-def img_to_base64(filename):
-    img_path = Path(__file__).parent / "images" / filename
-    if img_path.exists():
-        return base64.b64encode(img_path.read_bytes()).decode()
-    return ""
-
-FEATURE_IMAGES = {
-    "outline": img_to_base64("feature-outline.png"),
-    "ppt": img_to_base64("feature-ppt.png"),
-    "assessment": img_to_base64("feature-assessment.png"),
-    "practice": img_to_base64("feature-practice.png"),
-}
 
 # ============================================================
 # 配置区：默认 API Key（通过 Streamlit Secrets 配置，用户无需手动设置）
@@ -125,58 +107,80 @@ st.markdown("""
     }
     
     /* Slider - 全局蓝紫色（去掉 Streamlit 默认红色，覆盖所有内部元素） */
-    /* 滑块圆点 */
+    /* === 1. 滑块圆点 Thumb === */
     [data-baseweb="slider"] [role="slider"] {
         background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
         border: 2px solid #0a0e17 !important;
         box-shadow: 0 0 0 1px #4f46e5, 0 2px 8px rgba(79, 70, 229, 0.4) !important;
     }
-    /* 滑块上方数值标签 */
+    /* === 2. 滑块上方数值标签 (ThumbValue) - 这是 select_slider 的数字气泡 === */
     [data-baseweb="slider"] [data-testid="stThumbValue"],
     [data-baseweb="slider"] [data-testid="stThumbValue"] * {
-        color: #818cf8 !important;
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        background-color: #4f46e5 !important;
+        color: #ffffff !important;
         font-weight: 700 !important;
     }
-    /* 已填充轨道 */
+    /* === 3. 内部小三角 InnerThumb (select_slider 数字上方的红色小条) === */
+    [data-baseweb="slider"] [data-testid="stTickBarInner"] {
+        background: #4f46e5 !important;
+        background-color: #4f46e5 !important;
+    }
+    /* === 4. 已填充轨道 (ActiveTrack) === */
     [data-baseweb="slider"] [role="progressbar"],
     [data-baseweb="slider"] [data-testid="stSliderActiveTrack"],
     [data-baseweb="slider"] > div > div > div > div:first-child {
         background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
+        background-color: #4f46e5 !important;
     }
-    /* 未填充轨道 */
+    /* === 5. 未填充轨道 (InactiveTrack) === */
     [data-baseweb="slider"] [data-testid="stSliderInactiveTrack"],
     [data-baseweb="slider"] > div > div > div > div:last-child {
         background: rgba(255,255,255,0.12) !important;
     }
-    /* 轨道上任何带 background-color 的内联样式（覆盖 Streamlit 默认红色） */
-    [data-baseweb="slider"] div[style*="background"] {
+    /* === 6. 反红色 - 覆盖 baseweb 注入的 style 属性 === */
+    [data-baseweb="slider"] div[style*="background"],
+    [data-baseweb="slider"] div[style*="Background"] {
         background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
     }
-    [data-baseweb="slider"] span[style*="background"] {
+    [data-baseweb="slider"] span[style*="background"],
+    [data-baseweb="slider"] span[style*="Background"] {
         background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        color: #ffffff !important;
     }
-    /* 最小/最大值标签 */
+    /* 强制覆盖所有内联 style 中的红色（任意写法） */
+    [data-baseweb="slider"] [style*="rgb(255"] {
+        background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
+        color: #ffffff !important;
+    }
+    [data-baseweb="slider"] [style*="255, 75, 75"] {
+        background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
+        color: #ffffff !important;
+    }
+    /* === 7. 最小/最大值标签 === */
     [data-baseweb="slider"] [data-testid="stTickBarMin"],
     [data-baseweb="slider"] [data-testid="stTickBarMax"] {
         color: rgba(255,255,255,0.5) !important;
     }
-    /* 刻度数字 (1, 2, 3 ... 10) - 使用主题色 */
+    /* === 8. 刻度数字 (1, 2, 3 ... 10) === */
     [data-baseweb="slider"] [data-testid="stTickBar"] span,
     [data-baseweb="slider"] [data-testid="stTickBar"],
-    [data-baseweb="slider"] [data-testid="stTickBar"] * {
+    [data-baseweb="slider"] [data-testid="stTickBar"] *,
+    [data-baseweb="slider"] [data-testid="stTickBarItem"],
+    [data-baseweb="slider"] [data-testid="stTickBarItem"] * {
         color: #a5b4fc !important;
         font-weight: 600 !important;
     }
-    /* select_slider 容器背景 */
+    /* === 9. 选中的刻度 (select_slider 中被选中的数字) === */
+    [data-baseweb="slider"] [data-testid="stTickBarItem"][aria-selected="true"],
+    [data-baseweb="slider"] [data-testid="stTickBarItem"][aria-selected="true"] * {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        background-color: #4f46e5 !important;
+        color: #ffffff !important;
+    }
+    /* === 10. select_slider 容器 === */
     [data-baseweb="slider"] {
         background: transparent !important;
-    }
-    /* 防止任何红色 #ff4b4b 出现 */
-    [data-baseweb="slider"] *[style*="rgb(255, 75, 75)"],
-    [data-baseweb="slider"] *[style*="#ff4b4b"],
-    [data-baseweb="slider"] *[style*="255, 75, 75"] {
-        background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%) !important;
-        color: #a5b4fc !important;
     }
     
     .main .block-container {
@@ -248,7 +252,7 @@ st.markdown("""
     /* ===== Hero 区域 ===== */
     .hero-section {
         background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
-        padding: 4rem 2rem 5rem 2rem;
+        padding: 2rem 2rem 2.5rem 2rem;
         color: white;
         text-align: left;
         position: relative;
@@ -525,9 +529,13 @@ st.markdown("""
         flex-direction: row-reverse;
     }
     .feature-content {
-        flex: 1;
-        min-width: 0;
         text-align: left;
+        padding: 1rem 0;
+    }
+    .feature-content .feature-tag,
+    .feature-content .feature-name,
+    .feature-content .feature-desc {
+        display: block;
     }
     .feature-tag {
         display: inline-block;
@@ -551,21 +559,19 @@ st.markdown("""
         line-height: 1.8;
     }
     .feature-preview {
-        flex: 1;
-        min-width: 0;
         border-radius: 16px;
         overflow: hidden;
         border: 1px solid rgba(255,255,255,0.08);
         background: rgba(255,255,255,0.03);
+        margin: 1rem 0;
     }
-    .feature-preview img {
+    .feature-preview img,
+    .features-section img {
         width: 100%;
         height: auto;
         display: block;
-        transition: transform 0.3s;
-    }
-    .feature-row:hover .feature-preview img {
-        transform: scale(1.03);
+        border-radius: 16px;
+        border: 1px solid rgba(255,255,255,0.08);
     }
     
     /* ===== 工作区 ===== */
@@ -725,22 +731,23 @@ st.markdown("""
         font-size: 1.25rem;
     }
     .preview-card {
-        background: rgba(255,255,255,0.03);
-        border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 10px;
-        padding: 0.9rem 1.1rem;
-        margin-bottom: 0.6rem;
+        background: rgba(79, 70, 229, 0.08);
+        border: 1px solid rgba(129, 140, 248, 0.18);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        margin-bottom: 0.75rem;
         display: flex;
         align-items: center;
         gap: 0.9rem;
         transition: all 0.2s;
     }
     .preview-card:hover {
-        background: rgba(255,255,255,0.06);
+        background: rgba(79, 70, 229, 0.14);
+        border-color: rgba(129, 140, 248, 0.35);
     }
     .preview-card.selected {
-        border-color: rgba(129, 140, 248, 0.5);
-        background: rgba(79, 70, 229, 0.1);
+        border-color: rgba(129, 140, 248, 0.55);
+        background: rgba(79, 70, 229, 0.18);
     }
     .preview-icon {
         font-size: 1.1rem;
@@ -1295,69 +1302,63 @@ st.html("""
 """)
 
 # ============================================================
-# 功能模块展示 - 左右交替布局（拆分成 5 次独立渲染，避免大 HTML 字符串被截断）
+# 功能模块展示 - 左右交替布局（用 st.columns 渲染图片，最可靠）
 # ============================================================
-st.html("""
+st.markdown("""
 <div class="features-section" id="features">
     <div class="features-header">
         <div class="features-title">覆盖全链路培训需求</div>
         <div class="features-subtitle">从课程规划到效果评估，一站式生成完整培训方案</div>
     </div>
-""")
-
-st.markdown(f"""
-<div class="feature-row">
-    <div class="feature-content">
-        <div class="feature-tag">智能生成</div>
-        <div class="feature-name">课程大纲自动构建</div>
-        <div class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配，让培训体系清晰可控。</div>
-    </div>
-    <div class="feature-preview">
-        <img src="data:image/png;base64,{FEATURE_IMAGES['outline']}" alt="课程大纲自动构建">
-    </div>
-</div>
 """, unsafe_allow_html=True)
 
-st.markdown(f"""
-<div class="feature-row reverse">
-    <div class="feature-content">
-        <div class="feature-tag">一键输出</div>
-        <div class="feature-name">培训 PPT 即开即用</div>
-        <div class="feature-desc">自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结，可直接用于现场培训。</div>
-    </div>
-    <div class="feature-preview">
-        <img src="data:image/png;base64,{FEATURE_IMAGES['ppt']}" alt="培训 PPT 即开即用">
-    </div>
-</div>
-""", unsafe_allow_html=True)
+def _feature_row(name, tag, desc, image_path, reverse=False):
+    """渲染一行功能模块：左侧内容 + 右侧图片（reverse 时互换）"""
+    content_html = f"""
+    <div class="feature-tag">{tag}</div>
+    <div class="feature-name">{name}</div>
+    <div class="feature-desc">{desc}</div>
+    """
+    if reverse:
+        c_img, c_text = st.columns([45, 55], gap="large")
+    else:
+        c_text, c_img = st.columns([55, 45], gap="large")
+    with c_text:
+        st.markdown(f'<div class="feature-content">{content_html}</div>', unsafe_allow_html=True)
+    with c_img:
+        st.image(image_path, use_container_width=True)
 
-st.markdown(f"""
-<div class="feature-row">
-    <div class="feature-content">
-        <div class="feature-tag">多维度</div>
-        <div class="feature-name">智能考核与评估</div>
-        <div class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助培训管理者科学评估培训效果。</div>
-    </div>
-    <div class="feature-preview">
-        <img src="data:image/png;base64,{FEATURE_IMAGES['assessment']}" alt="智能考核与评估">
-    </div>
-</div>
-""", unsafe_allow_html=True)
+_feature_row(
+    "课程大纲自动构建",
+    "智能生成",
+    "基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配，让培训体系清晰可控。",
+    "images/feature-outline.jpg",
+)
 
-st.markdown(f"""
-<div class="feature-row reverse">
-    <div class="feature-content">
-        <div class="feature-tag">实战导向</div>
-        <div class="feature-name">实操场景化练习</div>
-        <div class="feature-desc">根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中快速掌握核心功能。</div>
-    </div>
-    <div class="feature-preview">
-        <img src="data:image/png;base64,{FEATURE_IMAGES['practice']}" alt="实操场景化练习">
-    </div>
-</div>
-""", unsafe_allow_html=True)
+_feature_row(
+    "培训 PPT 即开即用",
+    "一键输出",
+    "自动生成结构完整、版式专业的演示文稿，包含封面、目录、内容页和总结，可直接用于现场培训。",
+    "images/feature-ppt.jpg",
+    reverse=True,
+)
 
-st.html("</div>")
+_feature_row(
+    "智能考核与评估",
+    "多维度",
+    "生成多类型考核题目，支持自动评分和成绩分析，帮助培训管理者科学评估培训效果。",
+    "images/feature-assessment.jpg",
+)
+
+_feature_row(
+    "实操场景化练习",
+    "实战导向",
+    "根据产品使用场景生成实战案例与操作练习，让学员在模拟环境中快速掌握核心功能。",
+    "images/feature-practice.jpg",
+    reverse=True,
+)
+
+st.markdown("</div>", unsafe_allow_html=True)
 
 # ============================================================
 # 生成工作区（左右分栏）

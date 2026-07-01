@@ -86,6 +86,10 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
     
     /* ===== 全局基础 ===== */
+    :root {
+        --primary-color: #4f46e5 !important;
+        --st-primary-color: #4f46e5 !important;
+    }
     * {
         font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
     }
@@ -93,6 +97,60 @@ st.markdown("""
     body, .stApp {
         background: #0a0e17 !important;
         color: white;
+    }
+    
+    /* ===== 强制覆盖 Streamlit 主题色（按钮、滑块等） ===== */
+    .stApp [data-testid="stSidebar"] { background: rgba(10,14,23,0.95) !important; }
+    
+    /* Primary 按钮 - 全局蓝紫色 */
+    .stButton button[kind="primary"],
+    .stButton button[data-testid="baseButton-primary"],
+    .stButton > button[data-testid="baseButton-primary"],
+    .stApp .stButton button[kind="primary"] {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35) !important;
+    }
+    .stButton button[kind="primary"]:hover,
+    .stButton button[data-testid="baseButton-primary"]:hover {
+        background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%) !important;
+        box-shadow: 0 6px 22px rgba(79, 70, 229, 0.45) !important;
+    }
+    .stButton button[kind="primary"]:disabled,
+    .stButton button[data-testid="baseButton-primary"]:disabled {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        opacity: 0.6 !important;
+        cursor: not-allowed !important;
+    }
+    
+    /* Select Slider - 全局蓝紫色 track + thumb */
+    [data-baseweb="slider"] [role="slider"] {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+        border: 2px solid #0a0e17 !important;
+        box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3) !important;
+    }
+    [data-baseweb="slider"] .st-cx6aqv,
+    [data-baseweb="slider"] .st-ef3g0q {
+        background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
+    }
+    /* Slider track active bar (filled portion) */
+    [data-baseweb="slider"] > div > div > div > div:nth-child(1) {
+        background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
+    }
+    /* Slider track inactive bar (unfilled portion) */
+    [data-baseweb="slider"] > div > div > div > div:nth-child(2) {
+        background: rgba(255,255,255,0.15) !important;
+    }
+    /* Slider tick bar min/max labels */
+    [data-baseweb="slider"] [data-testid="stTickBarMin"],
+    [data-baseweb="slider"] [data-testid="stTickBarMax"] {
+        color: rgba(255,255,255,0.5) !important;
+    }
+    /* Slider value label */
+    [data-baseweb="slider"] [data-testid="stThumbValue"] {
+        color: #818cf8 !important;
+        font-weight: 600 !important;
     }
     
     .main .block-container {
@@ -545,63 +603,44 @@ st.markdown("""
         color: rgba(255,255,255,0.35);
         margin-top: 0.2rem;
     }
-    .input-panel [data-baseweb="slider"] [data-testid="stTickBarMin"],
-    .input-panel [data-baseweb="slider"] [data-testid="stTickBarMax"] {
-        color: rgba(255,255,255,0.5) !important;
-    }
-    .input-panel [data-baseweb="slider"] [role="slider"] {
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
-        border-color: #4f46e5 !important;
-    }
-    .input-panel [data-baseweb="slider"] [data-testid="stThumbValue"] {
-        color: #818cf8 !important;
-        font-weight: 600 !important;
-    }
-    .input-panel .stButton > button {
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
-        color: white !important;
-        border: none !important;
-        border-radius: 10px !important;
-        padding: 0.85rem !important;
-        font-size: 0.95rem !important;
-        font-weight: 600 !important;
-        width: 100% !important;
-        cursor: pointer !important;
-        transition: all 0.2s !important;
-        box-shadow: 0 4px 16px rgba(79, 70, 229, 0.35) !important;
-    }
-    .input-panel .stButton > button:hover {
-        background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%) !important;
-        box-shadow: 0 6px 22px rgba(79, 70, 229, 0.45) !important;
-        transform: translateY(-1px);
-    }
-    .input-panel .stButton > button:active {
-        transform: translateY(0);
-    }
-    .input-panel .stButton > button:disabled {
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
-        opacity: 0.6;
-        cursor: not-allowed !important;
-    }
     
-    /* 右侧预览区 */
+    /* 右侧预览区 - 与左侧输入区风格统一 */
     .preview-panel {
         background: rgba(255,255,255,0.05);
         border: 1px solid rgba(255,255,255,0.1);
         border-radius: 20px;
         padding: 1.75rem;
         height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+    .preview-panel::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 4px;
+        height: 100%;
+        background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 100%);
     }
     .preview-panel-title {
-        font-size: 1.1rem;
-        font-weight: 600;
+        font-size: 1.15rem;
+        font-weight: 700;
         color: white;
         margin-bottom: 1.5rem;
         padding-bottom: 1rem;
+        padding-left: 1rem;
         border-bottom: 1px solid rgba(255,255,255,0.1);
         display: flex;
         align-items: center;
         gap: 0.6rem;
+    }
+    .preview-panel-title .icon {
+        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: 1.25rem;
     }
     .preview-card {
         background: rgba(255,255,255,0.03);
@@ -771,12 +810,9 @@ st.markdown("""
         border-color: rgba(129, 140, 248, 0.5) !important;
         box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15) !important;
     }
+    /* Streamlit 内置 Slider 组件 - 通用主题色覆盖 */
     .stSlider > div > div {
         background: rgba(255,255,255,0.1) !important;
-    }
-    .stSlider [role="slider"] {
-        background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
-        border: 2px solid #0a0e17 !important;
     }
     .stTabs [data-baseweb="tab-list"] {
         gap: 0.25rem;
@@ -1275,7 +1311,7 @@ if not st.session_state.api_key:
         </div>
         <div class="footer-bottom">
             <div class="footer-copyright">© 2026 AI培训设计器</div>
-            <div class="footer-copyright">v5.1 | 由 ChelseaPYC 构建</div>
+            <div class="footer-copyright">v5.2 | 由 ChelseaPYC 构建</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -1370,7 +1406,7 @@ with right_col:
     # 右侧预览面板
     st.markdown("""
     <div class="preview-panel">
-        <div class="preview-panel-title">👁️ 生成预览</div>
+        <div class="preview-panel-title"><span class="icon">👁️</span> 生成预览</div>
     """, unsafe_allow_html=True)
     
     # 生成过程
@@ -1502,7 +1538,8 @@ st.markdown("""
     </div>
         <div class="footer-bottom">
             <div class="footer-copyright">© 2026 AI培训设计器</div>
-            <div class="footer-copyright">v5.1 | 由 ChelseaPYC 构建</div>
+            <div class="footer-copyright">v5.2 | 由 ChelseaPYC 构建</div>
         </div>
     </div>
+</div>
 """, unsafe_allow_html=True)

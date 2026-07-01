@@ -3,27 +3,74 @@ import requests
 import json
 import time
 import base64
+import os
+import shutil
 from pathlib import Path
 
 # ============================================================
-# 功能卡片图片 - 启动时读为 base64，内联到 <img src="data:...">
-# 走 st.markdown(unsafe_allow_html=True) 输出，绕开 st.image / MediaFileStorage
-# 必须在 set_page_config 之前读取，缓存到模块级变量，整个会话复用
+# 功能卡片图片 - 启动时确保 images/ 在工作目录下，然后由 st.image() 渲染
+# 方案：把 images/ 复制到 Path.cwd()，st.image("images/xxx.jpg") 用相对路径
+# 这样 MediaFileStorage 一定能找到文件
 # ============================================================
-def _to_data_uri(filename: str) -> str:
-    img_path = Path(__file__).parent / "images" / filename
-    if not img_path.exists():
-        return ""
-    with open(img_path, "rb") as f:
-        b64 = base64.b64encode(f.read()).decode("ascii")
-    return f"data:image/jpeg;base64,{b64}"
+def _ensure_images_in_cwd() -> dict:
+    """
+    把 app.py 同级 images/ 目录里的图片复制到当前工作目录的 images/ 子目录。
+    返回 {key: 相对路径} 字典，供 st.image() 使用。
+    如果源目录不存在，返回空字典。
+    """
+    # 找源 images 目录
+    src_dir = None
+    if "__file__" in globals():
+        src_dir = Path(__file__).resolve().parent / "images"
+    if src_dir is None or not src_dir.exists():
+        try:
+            st.session_state.setdefault("_img_debug", []).append(
+                f"images/ NOT FOUND near app.py, cwd={Path.cwd()}"
+            )
+        except Exception:
+            pass
+        return {}
 
-FEATURE_IMAGES = {
-    "outline": _to_data_uri("feature-outline.jpg"),
-    "ppt": _to_data_uri("feature-ppt.jpg"),
-    "assessment": _to_data_uri("feature-assessment.jpg"),
-    "practice": _to_data_uri("feature-practice.jpg"),
-}
+    # 目标：当前工作目录下的 images/
+    dst_dir = Path.cwd() / "images"
+    try:
+        dst_dir.mkdir(parents=True, exist_ok=True)
+    except Exception as e:
+        try:
+            st.session_state.setdefault("_img_debug", []).append(
+                f"mkdir failed: {e}"
+            )
+        except Exception:
+            pass
+        return {}
+
+    mapping = {
+        "outline": "feature-outline.jpg",
+        "ppt": "feature-ppt.jpg",
+        "assessment": "feature-assessment.jpg",
+        "practice": "feature-practice.jpg",
+    }
+    result = {}
+    for key, fn in mapping.items():
+        src_file = src_dir / fn
+        dst_file = dst_dir / fn
+        if not src_file.exists():
+            continue
+        try:
+            # 已存在且大小一致就跳过；否则覆盖
+            if not dst_file.exists() or dst_file.stat().st_size != src_file.stat().st_size:
+                shutil.copy2(src_file, dst_file)
+            result[key] = f"images/{fn}"
+        except Exception as e:
+            try:
+                st.session_state.setdefault("_img_debug", []).append(
+                    f"copy {fn} failed: {e}"
+                )
+            except Exception:
+                pass
+    return result
+
+FEATURE_IMAGES = _ensure_images_in_cwd()
 
 # ============================================================
 # 配置区：默认 API Key（通过 Streamlit Secrets 配置，用户无需手动设置）
@@ -580,14 +627,10 @@ st.markdown("""
         color: rgba(255,255,255,0.55);
         line-height: 1.8;
     }
-    /* 功能卡片图片 — 由 st.markdown 输出的 <img>，class=feature-image */
-    .feature-image {
-        width: 100%;
-        height: auto;
-        display: block;
+    /* 功能卡片中的 st.image 输出 */
+    [data-testid="stImage"] img {
         border-radius: 16px;
         border: 1px solid rgba(255,255,255,0.08);
-        background: rgba(255,255,255,0.03);
     }
     .feature-image-fallback {
         height: 180px;
@@ -596,6 +639,9 @@ st.markdown("""
         justify-content: center;
         color: rgba(255,255,255,0.4);
         font-size: 0.9rem;
+        background: rgba(255,255,255,0.03);
+        border: 1px dashed rgba(255,255,255,0.1);
+        border-radius: 16px;
     }
     
     /* ===== 工作区 ===== */
@@ -1345,18 +1391,34 @@ def _feature_row(name, tag, desc, image_key, reverse=False):
         <div class="feature-desc">{desc}</div>
     </div>
     """
-    img_src = FEATURE_IMAGES.get(image_key, "")
-    image_html = (
-        f'<img class="feature-image" src="{img_src}" alt="{name}"/>'
-        if img_src
-        else f'<div class="feature-image feature-image-fallback">{name}</div>'
-    )
+    # reverse=True 时图片在左，文字在右；reverse=False 时图片在右，文字在左
+    if reverse:
+        c_img, c_text = st.columns([45, 55], gap="large")
+    else:
+        c_text, c_img = st.columns([55, 45], gap="large")
 
-    c_text, c_img = st.columns([55, 45], gap="large")
     with c_text:
         st.markdown(content_html, unsafe_allow_html=True)
     with c_img:
-        st.markdown(image_html, unsafe_allow_html=True)
+        img_path = FEATURE_IMAGES.get(image_key)
+        if img_path:
+            try:
+                st.image(img_path, use_container_width=True)
+            except Exception:
+                # 兜底：使用绝对路径再试一次
+                abs_path = str(Path(__file__).resolve().parent / "images" / Path(img_path).name)
+                try:
+                    st.image(abs_path, use_container_width=True)
+                except Exception:
+                    st.markdown(
+                        f'<div class="feature-image-fallback">{name}</div>',
+                        unsafe_allow_html=True,
+                    )
+        else:
+            st.markdown(
+                f'<div class="feature-image-fallback">{name}</div>',
+                unsafe_allow_html=True,
+            )
 
 _feature_row(
     "课程大纲自动构建",

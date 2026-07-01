@@ -2,25 +2,27 @@ import streamlit as st
 import requests
 import json
 import time
+import base64
 from pathlib import Path
-from PIL import Image
 
 # ============================================================
-# 功能卡片图片 - 用 PIL 加载为内存对象，再交给 st.image()
-# st.image(pil_obj) 不走 MediaFileStorage，不会触发路径错误
+# 功能卡片图片 - 启动时读为 base64，内联到 <img src="data:...">
+# 走 st.markdown(unsafe_allow_html=True) 输出，绕开 st.image / MediaFileStorage
+# 必须在 set_page_config 之前读取，缓存到模块级变量，整个会话复用
 # ============================================================
-@st.cache_data
-def load_feature_image(filename: str) -> Image.Image:
+def _to_data_uri(filename: str) -> str:
     img_path = Path(__file__).parent / "images" / filename
-    if img_path.exists():
-        return Image.open(str(img_path)).copy()
-    return None
+    if not img_path.exists():
+        return ""
+    with open(img_path, "rb") as f:
+        b64 = base64.b64encode(f.read()).decode("ascii")
+    return f"data:image/jpeg;base64,{b64}"
 
 FEATURE_IMAGES = {
-    "outline": load_feature_image("feature-outline.jpg"),
-    "ppt": load_feature_image("feature-ppt.jpg"),
-    "assessment": load_feature_image("feature-assessment.jpg"),
-    "practice": load_feature_image("feature-practice.jpg"),
+    "outline": _to_data_uri("feature-outline.jpg"),
+    "ppt": _to_data_uri("feature-ppt.jpg"),
+    "assessment": _to_data_uri("feature-assessment.jpg"),
+    "practice": _to_data_uri("feature-practice.jpg"),
 }
 
 # ============================================================
@@ -578,10 +580,22 @@ st.markdown("""
         color: rgba(255,255,255,0.55);
         line-height: 1.8;
     }
-    /* 功能卡片中的 st.image 输出 — 全局仅此 4 处，安全使用通用选择器 */
-    .stImage img {
+    /* 功能卡片图片 — 由 st.markdown 输出的 <img>，class=feature-image */
+    .feature-image {
+        width: 100%;
+        height: auto;
+        display: block;
         border-radius: 16px;
         border: 1px solid rgba(255,255,255,0.08);
+        background: rgba(255,255,255,0.03);
+    }
+    .feature-image-fallback {
+        height: 180px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255,255,255,0.4);
+        font-size: 0.9rem;
     }
     
     /* ===== 工作区 ===== */
@@ -1325,26 +1339,24 @@ st.markdown("""
 def _feature_row(name, tag, desc, image_key, reverse=False):
     """渲染一行功能模块：左侧内容 + 右侧图片（reverse 时互换）"""
     content_html = f"""
-    <div class="feature-tag">{tag}</div>
-    <div class="feature-name">{name}</div>
-    <div class="feature-desc">{desc}</div>
+    <div class="feature-content">
+        <div class="feature-tag">{tag}</div>
+        <div class="feature-name">{name}</div>
+        <div class="feature-desc">{desc}</div>
+    </div>
     """
-    # st.image(pil_obj) 直接渲染内存中的 PIL 对象，不依赖文件路径
-    pil_img = FEATURE_IMAGES.get(image_key)
-    if reverse:
-        c_text, c_img = st.columns([55, 45], gap="large")
-        with c_text:
-            st.markdown(f'<div class="feature-content">{content_html}</div>', unsafe_allow_html=True)
-        with c_img:
-            if pil_img:
-                st.image(pil_img, use_container_width=True)
-    else:
-        c_text, c_img = st.columns([55, 45], gap="large")
-        with c_text:
-            st.markdown(f'<div class="feature-content">{content_html}</div>', unsafe_allow_html=True)
-        with c_img:
-            if pil_img:
-                st.image(pil_img, use_container_width=True)
+    img_src = FEATURE_IMAGES.get(image_key, "")
+    image_html = (
+        f'<img class="feature-image" src="{img_src}" alt="{name}"/>'
+        if img_src
+        else f'<div class="feature-image feature-image-fallback">{name}</div>'
+    )
+
+    c_text, c_img = st.columns([55, 45], gap="large")
+    with c_text:
+        st.markdown(content_html, unsafe_allow_html=True)
+    with c_img:
+        st.markdown(image_html, unsafe_allow_html=True)
 
 _feature_row(
     "课程大纲自动构建",

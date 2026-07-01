@@ -2,19 +2,19 @@ import streamlit as st
 import requests
 import json
 import time
-import base64
 from pathlib import Path
+from PIL import Image
 
 # ============================================================
-# 功能卡片图片 - Base64 内嵌（图片已压缩至 ~10-17KB JPEG，总计 ~69KB）
-# 解决 Streamlit Cloud 上 st.image() 的 MediaFileStorageError
+# 功能卡片图片 - 用 PIL 加载为内存对象，再交给 st.image()
+# st.image(pil_obj) 不走 MediaFileStorage，不会触发路径错误
 # ============================================================
 @st.cache_data
-def load_feature_image(filename: str) -> str:
+def load_feature_image(filename: str) -> Image.Image:
     img_path = Path(__file__).parent / "images" / filename
     if img_path.exists():
-        return base64.b64encode(img_path.read_bytes()).decode()
-    return ""
+        return Image.open(str(img_path)).copy()
+    return None
 
 FEATURE_IMAGES = {
     "outline": load_feature_image("feature-outline.jpg"),
@@ -578,18 +578,8 @@ st.markdown("""
         color: rgba(255,255,255,0.55);
         line-height: 1.8;
     }
-    .feature-preview {
-        border-radius: 16px;
-        overflow: hidden;
-        border: 1px solid rgba(255,255,255,0.08);
-        background: rgba(255,255,255,0.03);
-        margin: 1rem 0;
-    }
-    .feature-preview img,
-    .features-section img {
-        width: 100%;
-        height: auto;
-        display: block;
+    /* 功能卡片中的 st.image 输出 — 全局仅此 4 处，安全使用通用选择器 */
+    .stImage img {
         border-radius: 16px;
         border: 1px solid rgba(255,255,255,0.08);
     }
@@ -1339,18 +1329,22 @@ def _feature_row(name, tag, desc, image_key, reverse=False):
     <div class="feature-name">{name}</div>
     <div class="feature-desc">{desc}</div>
     """
-    # 用 base64 内嵌图片，避免 st.image() 在 Streamlit Cloud 上的 MediaFileStorageError
-    img_b64 = FEATURE_IMAGES.get(image_key, "")
-    img_html = f'<img src="data:image/jpeg;base64,{img_b64}" alt="{name}">' if img_b64 else '<div class="img-placeholder">图片加载中</div>'
-
+    # st.image(pil_obj) 直接渲染内存中的 PIL 对象，不依赖文件路径
+    pil_img = FEATURE_IMAGES.get(image_key)
     if reverse:
-        c_img, c_text = st.columns([45, 55], gap="large")
+        c_text, c_img = st.columns([55, 45], gap="large")
+        with c_text:
+            st.markdown(f'<div class="feature-content">{content_html}</div>', unsafe_allow_html=True)
+        with c_img:
+            if pil_img:
+                st.image(pil_img, use_container_width=True)
     else:
         c_text, c_img = st.columns([55, 45], gap="large")
-    with c_text:
-        st.markdown(f'<div class="feature-content">{content_html}</div>', unsafe_allow_html=True)
-    with c_img:
-        st.markdown(f'<div class="feature-preview">{img_html}</div>', unsafe_allow_html=True)
+        with c_text:
+            st.markdown(f'<div class="feature-content">{content_html}</div>', unsafe_allow_html=True)
+        with c_img:
+            if pil_img:
+                st.image(pil_img, use_container_width=True)
 
 _feature_row(
     "课程大纲自动构建",

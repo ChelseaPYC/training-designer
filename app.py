@@ -2054,6 +2054,14 @@ body::before {
     padding: var(--sp-lg);
   }
 }
+
+/* Streamlit column overrides for generator grid */
+.generator-grid [data-testid="stHorizontalBlock"] {
+  gap: var(--sp-2xl) !important;
+}
+.generator-grid [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
+  padding: 0 !important;
+}
 </style>
 
 """, unsafe_allow_html=True)
@@ -2357,19 +2365,16 @@ st.markdown("""
 
 
 st.markdown("""
-<!-- ==================== FEATURES SECTION ==================== -->
 <section class="features-section" id="features">
     <div class="container-wide">
-        <div class="section-heading-wrap reveal">
+        <div class="section-heading-wrap">
             <h2 class="section-heading-lg">覆盖全链路培训需求</h2>
             <p class="section-desc">从课程规划到效果评估，一站式生成完整培训方案</p>
         </div>
-
-        <!-- Feature 1: Text left, Image right -->
         <div class="feature-wrapper">
             <div class="feature-number">01</div>
             <div class="feature-row">
-                <div class="feature-text-col reveal">
+                <div class="feature-text-col">
                     <span class="feature-badge">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/></svg>
                         智能生成
@@ -2377,7 +2382,7 @@ st.markdown("""
                     <h3 class="feature-title">课程大纲自动构建</h3>
                     <p class="feature-desc">基于产品特性自动生成结构化课程目录，包含学习目标、知识模块和课时分配，让培训体系清晰可控。</p>
                 </div>
-                <div class="feature-img-col reveal reveal-delay-2">
+                <div class="feature-img-col">
                     <div class="feature-mockup-wrap">
                         <div class="feature-mockup">
                             <div class="mockup-header">
@@ -2414,12 +2419,10 @@ st.markdown("""
             <div class="feature-connector-line"></div>
             <div class="feature-connector-dot"></div>
         </div>
-
-        <!-- Feature 2: Image left, Text right -->
         <div class="feature-wrapper">
             <div class="feature-number">02</div>
             <div class="feature-row feature-row-reverse">
-                <div class="feature-img-col reveal">
+                <div class="feature-img-col">
                     <div class="feature-mockup-wrap">
                         <div class="feature-mockup">
                             <div class="mockup-header">
@@ -2490,7 +2493,7 @@ st.markdown("""
                         </div>
                     </div>
                 </div>
-                <div class="feature-text-col reveal reveal-delay-2">
+                <div class="feature-text-col">
                     <span class="feature-badge">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>
                         一键输出
@@ -2505,12 +2508,10 @@ st.markdown("""
             <div class="feature-connector-line"></div>
             <div class="feature-connector-dot"></div>
         </div>
-
-        <!-- Feature 3: Text left, Image right -->
         <div class="feature-wrapper">
             <div class="feature-number">03</div>
             <div class="feature-row">
-                <div class="feature-text-col reveal">
+                <div class="feature-text-col">
                     <span class="feature-badge">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                         多维度
@@ -2518,7 +2519,7 @@ st.markdown("""
                     <h3 class="feature-title">智能考核与评估</h3>
                     <p class="feature-desc">生成多类型考核题目，支持自动评分和成绩分析，帮助培训管理者科学评估培训效果。</p>
                 </div>
-                <div class="feature-img-col reveal reveal-delay-2">
+                <div class="feature-img-col">
                     <div class="feature-mockup-wrap">
                         <div class="feature-mockup">
                             <div class="mockup-header">
@@ -2569,12 +2570,10 @@ st.markdown("""
             <div class="feature-connector-line"></div>
             <div class="feature-connector-dot"></div>
         </div>
-
-        <!-- Feature 4: Image left, Text right -->
         <div class="feature-wrapper">
             <div class="feature-number">04</div>
             <div class="feature-row feature-row-reverse">
-                <div class="feature-img-col reveal">
+                <div class="feature-img-col">
                     <div class="feature-mockup-wrap">
                         <div class="feature-mockup">
                             <div class="mockup-header">
@@ -2601,7 +2600,7 @@ st.markdown("""
                         </div>
                     </div>
                 </div>
-                <div class="feature-text-col reveal reveal-delay-2">
+                <div class="feature-text-col">
                     <span class="feature-badge">
                         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/></svg>
                         实战导向
@@ -2623,7 +2622,17 @@ st.markdown("""
 if st.session_state.get("scroll_to_workspace", False):
     st.session_state.scroll_to_workspace = False
 
-st.markdown('''
+# 检查 API Key
+if not st.session_state.api_key:
+    st.markdown("""
+    <div style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; margin: 1rem 0;">
+        <p style="font-size: 1.1rem; margin-bottom: 0.5rem; color: rgba(255,255,255,0.85); font-weight: 600;">API Key 未配置</p>
+        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.45);">请在 Streamlit Cloud 后台 Settings → Secrets 中配置 DEEPSEEK_API_KEY</p>
+    </div>
+    """, unsafe_allow_html=True)
+    st.stop()
+
+st.markdown("""
 <section class="generator-section" id="generator" style="padding: 4rem 1.5rem;">
     <div class="container-generator">
         <div class="section-heading-wrap">
@@ -2631,6 +2640,12 @@ st.markdown('''
             <p class="section-desc">填写培训信息，一键生成完整培训材料</p>
         </div>
         <div class="generator-grid">
+""", unsafe_allow_html=True)
+
+left_col, right_col = st.columns([1, 1])
+
+with left_col:
+    st.markdown("""
             <div class="form-panel">
                 <div class="panel-heading">
                     <span class="panel-icon">
@@ -2638,58 +2653,21 @@ st.markdown('''
                     </span>
                     <h3>培训信息</h3>
                 </div>
-''', unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
-# ============================================================
-# 检查 API Key
-# ============================================================
-
-
-# 检查 API Key
-if not st.session_state.api_key:
-    st.markdown("""
-    <div style="text-align: center; padding: 2rem; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; margin: 1rem 0;">
-        <p style="font-size: 1.1rem; margin-bottom: 0.5rem; color: rgba(255,255,255,0.85); font-weight: 600;">⚠️ API Key 未配置</p>
-        <p style="font-size: 0.85rem; color: rgba(255,255,255,0.45);">请在 Streamlit Cloud 后台 Settings → Secrets 中配置 DEEPSEEK_API_KEY</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # 底部页脚
-    st.markdown("""
-    <div class="footer-section">
-        <div class="footer-brand">🎓 AI培训设计器</div>
-        <div class="footer-tagline">让每一位产品培训师精准有方</div>
-        <div class="footer-links">
-            <a href="#top">回到顶部</a>
-            <a href="#features">功能介绍</a>
-            <a href="#workspace">立即开始</a>
-        </div>
-        <div class="footer-bottom">
-            <div class="footer-copyright">© 2026 AI培训设计器</div>
-            <div class="footer-copyright">v5.3 | 由 ChelseaPYC 构建</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    st.stop()
-
-left_col, right_col = st.columns([1, 1])
-
-with left_col:
-    # 左侧输入面板标题
-    st.markdown("""
-    <div class="input-panel-title"><span class="icon">📝</span> 培训信息</div>
-    """, unsafe_allow_html=True)
-    
-    st.markdown('<div class="form-label">产品名称</div>', unsafe_allow_html=True)
+    st.markdown('<div class="form-group">', unsafe_allow_html=True)
+    st.markdown('<label class="form-label">产品名称</label>', unsafe_allow_html=True)
     product_name = st.text_input(
         "",
         value=st.session_state.product_name,
-        placeholder="例如 WorkBuddy 智能设计助手",
+        placeholder="例如：WorkBuddy 智能设计助手",
         label_visibility="collapsed"
     )
-    st.markdown('<div class="form-hint">输入需要设计培训方案的产品名称</div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="form-label" style="margin-top: 1rem;">产品简介</div>', unsafe_allow_html=True)
+    st.markdown('<p class="form-hint">需要设计培训方案的产品名称</p>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="form-group">', unsafe_allow_html=True)
+    st.markdown('<label class="form-label">产品简介</label>', unsafe_allow_html=True)
     product_doc = st.text_area(
         "",
         value=st.session_state.product_doc,
@@ -2697,9 +2675,11 @@ with left_col:
         placeholder="简要描述产品的核心功能和定位",
         label_visibility="collapsed"
     )
-    st.markdown('<div class="form-hint">简要描述产品的核心功能和定位</div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="form-label" style="margin-top: 1rem;">培训对象</div>', unsafe_allow_html=True)
+    st.markdown('<p class="form-hint">简要描述产品的核心功能和定位</p>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="form-group">', unsafe_allow_html=True)
+    st.markdown('<label class="form-label">培训对象</label>', unsafe_allow_html=True)
     training_roles = st.multiselect(
         "",
         ["实施工程师", "运维工程师", "技术支持", "销售", "客户成功", "售前工程师", "市场", "行政", "财务"],
@@ -2707,33 +2687,38 @@ with left_col:
         placeholder="例如：销售团队、新员工、合作伙伴",
         label_visibility="collapsed"
     )
-    
-    st.markdown('<div class="form-label" style="margin-top: 1rem;">期望培训时长</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="form-group">', unsafe_allow_html=True)
+    st.markdown('<label class="form-label">期望培训时长</label>', unsafe_allow_html=True)
     training_days = st.select_slider(
         "",
         options=list(range(1, 11)),
         value=min(st.session_state.training_days, 10),
         label_visibility="collapsed"
     )
-    st.markdown(f'<div class="form-hint">当前选择：{training_days} 天（最长 10 天）</div>', unsafe_allow_html=True)
-    
-    st.markdown('<div class="form-label" style="margin-top: 1rem;">产品类型</div>', unsafe_allow_html=True)
+    st.markdown(f'<p class="form-hint">当前选择：<strong>{training_days} 天</strong>（最长 10 天）</p>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="form-group">', unsafe_allow_html=True)
+    st.markdown('<label class="form-label">产品类型</label>', unsafe_allow_html=True)
+    product_type_options = ["软件", "硬件", "SaaS", "平台", "其他"]
     product_type = st.selectbox(
         "",
-        ["软件", "硬件", "SaaS", "平台", "其他"],
-        index=["软件", "硬件", "SaaS", "平台", "其他"].index(st.session_state.product_type),
+        product_type_options,
+        index=product_type_options.index(st.session_state.product_type) if st.session_state.product_type in product_type_options else 0,
         label_visibility="collapsed"
     )
-    
+    st.markdown('</div>', unsafe_allow_html=True)
+
     # 保存当前输入
     st.session_state.product_name = product_name
     st.session_state.product_type = product_type
     st.session_state.training_roles = training_roles
     st.session_state.training_days = training_days
     st.session_state.product_doc = product_doc
-    
-    # 生成按钮
-    st.markdown("<div style='margin-top: 1.5rem;'>", unsafe_allow_html=True)
+
+    st.markdown("<div style='margin-top: 0.5rem;'>", unsafe_allow_html=True)
     generate_clicked = st.button(
         "生成培训材料",
         use_container_width=True,
@@ -2741,13 +2726,13 @@ with left_col:
         disabled=st.session_state.is_generating
     )
     st.markdown("</div>", unsafe_allow_html=True)
-    
+
     if generate_clicked:
         if not product_name:
-            st.error("❌ 请输入产品名称")
+            st.error("请输入产品名称")
             st.stop()
         elif not training_roles:
-            st.error("❌ 请选择培训对象")
+            st.error("请选择培训对象")
             st.stop()
         else:
             st.session_state.is_generating = True
@@ -2755,9 +2740,11 @@ with left_col:
             st.session_state.generated_content = {}
             st.rerun()
 
+    st.markdown('</div>', unsafe_allow_html=True)
 
-st.markdown("""
-            </div>
+
+with right_col:
+    st.markdown("""
             <div class="preview-panel">
                 <div class="panel-heading">
                     <span class="panel-icon">
@@ -2765,28 +2752,47 @@ st.markdown("""
                     </span>
                     <h3>生成预览</h3>
                 </div>
+                <div class="preview-list">
 """, unsafe_allow_html=True)
 
+    # SVG paths for preview icons (matching designer reference)
+    PREVIEW_SVGS = {
+        "blueprint": '<path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>',
+        "materials": '<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="13" y1="8" x2="19" y2="8"/>',
+        "assessment": '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>',
+        "hands_on": '<circle cx="12" cy="12" r="10"/><polygon points="10,8 16,12 10,16"/>'
+    }
 
-with right_col:
-    # 右侧预览面板标题
-    st.markdown("""
-    <div class="preview-panel-title"><span class="icon">👁️</span> 生成预览</div>
-    """, unsafe_allow_html=True)
-    
+    # 默认预览状态
+    if not st.session_state.is_generating and not st.session_state.generation_complete:
+        for module in ["blueprint", "materials", "assessment", "hands_on"]:
+            is_selected = st.session_state.module_selection.get(module, True)
+            item_class = "selected" if is_selected else ""
+            st.markdown(f"""
+                    <div class="preview-item {item_class}">
+                        <div class="preview-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{PREVIEW_SVGS[module]}</svg>
+                        </div>
+                        <div class="preview-info">
+                            <h4>{MODULE_LABELS[module]}</h4>
+                            <p>{MODULE_DESCRIPTIONS[module]}</p>
+                        </div>
+                    </div>
+            """, unsafe_allow_html=True)
+
     # 生成过程
     if st.session_state.is_generating and not st.session_state.generation_complete:
         modules_to_generate = [k for k, v in st.session_state.module_selection.items() if v]
         total_modules = len(modules_to_generate)
-        
+
         progress_bar = st.progress(0)
         status_text = st.empty()
-        
+
         for i, module in enumerate(modules_to_generate):
             progress = int(((i + 1) / total_modules) * 100)
             progress_bar.progress(progress)
             status_text.markdown(f"<div style='color: rgba(255,255,255,0.55); font-size: 0.85rem;'>正在生成：{MODULE_LABELS[module]} ({i+1}/{total_modules})</div>", unsafe_allow_html=True)
-            
+
             prompt = build_prompt(
                 module,
                 product_name,
@@ -2795,79 +2801,65 @@ with right_col:
                 training_days,
                 product_doc
             )
-            
+
             content = call_deepseek(prompt, st.session_state.api_key)
             st.session_state.generated_content[module] = content
             time.sleep(0.5)
-        
+
         progress_bar.progress(100)
-        status_text.markdown("<div style='color: #22c55e; font-size: 0.85rem;'>✅ 所有内容生成完成！</div>", unsafe_allow_html=True)
+        status_text.markdown("<div style='color: #22c55e; font-size: 0.85rem;'> 所有内容生成完成！</div>", unsafe_allow_html=True)
         st.session_state.generation_complete = True
         st.session_state.is_generating = False
         time.sleep(1)
         st.rerun()
-    
-    # 显示模块预览卡片
+
+    # 生成完成后显示预览
     elif st.session_state.generation_complete:
         modules_with_content = [k for k in st.session_state.module_selection.keys() if st.session_state.module_selection[k] and k in st.session_state.generated_content]
-        
+
         for module in modules_with_content:
             st.markdown(f"""
-            <div class="preview-card selected">
-                <div class="preview-icon">{MODULE_ICONS[module]}</div>
-                <div class="preview-info">
-                    <div class="preview-name">{MODULE_LABELS[module]}</div>
-                    <div class="preview-desc">{MODULE_DESCRIPTIONS[module]}</div>
-                </div>
-            </div>
+                    <div class="preview-item selected">
+                        <div class="preview-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">{PREVIEW_SVGS[module]}</svg>
+                        </div>
+                        <div class="preview-info">
+                            <h4>{MODULE_LABELS[module]}</h4>
+                            <p>{MODULE_DESCRIPTIONS[module]}</p>
+                        </div>
+                    </div>
             """, unsafe_allow_html=True)
-        
+
         # 下载按钮
         all_content = f"# {product_name} - 培训设计方案\n\n"
         all_content += f"生成时间：{time.strftime('%Y-%m-%d %H:%M:%S')}\n"
         all_content += f"培训周期：{training_days} 天\n\n"
         all_content += "---\n\n"
-        
+
         for module in modules_with_content:
             all_content += f"# {MODULE_LABELS[module]}\n\n"
             all_content += st.session_state.generated_content[module]
             all_content += "\n\n---\n\n"
-        
+
         st.download_button(
-            label="📥 下载完整方案",
+            label="下载完整方案",
             data=all_content,
             file_name=f"{product_name}_培训方案.md",
             mime="text/markdown",
             use_container_width=True
         )
-    else:
-        # 默认预览状态
-        for module in ["blueprint", "materials", "assessment", "hands_on"]:
-            is_selected = st.session_state.module_selection.get(module, True)
-            card_class = "selected" if is_selected else ""
-            st.markdown(f"""
-            <div class="preview-card {card_class}">
-                <div class="preview-icon">{MODULE_ICONS[module]}</div>
-                <div class="preview-info">
-                    <div class="preview-name">{MODULE_LABELS[module]}</div>
-                    <div class="preview-desc">{MODULE_DESCRIPTIONS[module]}</div>
+
+    st.markdown("""
                 </div>
             </div>
-            """, unsafe_allow_html=True)
-    
-
+""", unsafe_allow_html=True)
 
 st.markdown("""
-            </div>
         </div>
     </div>
 </section>
 """, unsafe_allow_html=True)
 
-
-
-# ============================================================
-# 生成结果展示
 # ============================================================
 if st.session_state.generation_complete:
     st.markdown("""

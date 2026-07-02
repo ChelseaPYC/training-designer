@@ -68,16 +68,20 @@ st.markdown("""
 .stApp { background: #080B14; }
 
 /* Hide Streamlit UI */
-header[data-testid="stHeader"] { display: none; }
-#MainMenu { visibility: hidden; }
-footer { visibility: hidden; }
-[data-testid="stDecoration"] { display: none; }
-.stDeployButton { display: none; }
-.stApp > header { display: none; }
-section[data-testid="stSidebar"] { display: none; }
+header[data-testid="stHeader"] { display: none !important; }
+#MainMenu { display: none !important; }
+footer { display: none !important; }
+[data-testid="stDecoration"] { display: none !important; }
+.stDeployButton { display: none !important; }
+.stApp > header { display: none !important; }
+section[data-testid="stSidebar"] { display: none !important; }
+[data-testid="stStatusWidget"] { display: none !important; }
+[data-testid="stToolbar"] { display: none !important; }
+.stActionButton { display: none !important; }
 
 .block-container { padding: 0 !important; max-width: 100% !important; }
 .main .block-container { padding-top: 0 !important; }
+.stApp { overflow: hidden; }
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #080B14; }
@@ -1561,6 +1565,15 @@ body::before {
   align-items: start;
 }
 
+/* Streamlit column overrides for generator layout */
+.generator-section [data-testid="stHorizontalBlock"] {
+  gap: 4rem !important;
+}
+.generator-section [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
+  padding: 0 !important;
+  width: 100% !important;
+}
+
 .panel-heading {
   display: flex;
   align-items: center;
@@ -1897,17 +1910,8 @@ body::before {
 }
 
 /* ================================================
-   SCROLL ANIMATIONS (Reveal on Scroll)
+   SCROLL ANIMATIONS (disabled for Streamlit)
    ================================================ */
-
-/* .reveal removed for Streamlit compatibility */
-
-/* .reveal.visible removed for Streamlit compatibility */
-
-/* .reveal-delay removed for Streamlit compatibility */
-/* .reveal-delay removed for Streamlit compatibility */
-/* .reveal-delay removed for Streamlit compatibility */
-/* .reveal-delay removed for Streamlit compatibility */
 
 /* ================================================
    RESPONSIVE DESIGN
@@ -1967,8 +1971,9 @@ body::before {
     max-width: 100%;
   }
 
-  .generator-grid {
-    grid-template-columns: 1fr;
+  .generator-section [data-testid="stHorizontalBlock"] {
+    flex-direction: column !important;
+    gap: 2rem !important;
   }
 
   .preview-panel {
@@ -2055,13 +2060,6 @@ body::before {
   }
 }
 
-/* Streamlit column overrides for generator grid */
-.generator-grid [data-testid="stHorizontalBlock"] {
-  gap: var(--sp-2xl) !important;
-}
-.generator-grid [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
-  padding: 0 !important;
-}
 </style>
 
 """, unsafe_allow_html=True)
@@ -2616,6 +2614,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
+st.markdown('<div class="gradient-divider"></div>', unsafe_allow_html=True)
+
 # ============================================================
 # 生成工作区
 # ============================================================
@@ -2633,16 +2633,15 @@ if not st.session_state.api_key:
     st.stop()
 
 st.markdown("""
-<section class="generator-section" id="generator" style="padding: 4rem 1.5rem;">
+<section class="generator-section" id="generator">
     <div class="container-generator">
         <div class="section-heading-wrap">
             <h2 class="section-heading-lg">开始生成您的培训方案</h2>
             <p class="section-desc">填写培训信息，一键生成完整培训材料</p>
         </div>
-        <div class="generator-grid">
 """, unsafe_allow_html=True)
 
-left_col, right_col = st.columns([1, 1])
+left_col, right_col = st.columns([1, 1], gap="large")
 
 with left_col:
     st.markdown("""
@@ -2663,7 +2662,7 @@ with left_col:
         placeholder="例如：WorkBuddy 智能设计助手",
         label_visibility="collapsed"
     )
-    st.markdown('<p class="form-hint">需要设计培训方案的产品名称</p>', unsafe_allow_html=True)
+    st.markdown('<p class="form-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>需要设计培训方案的产品名称</p>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="form-group">', unsafe_allow_html=True)
@@ -2675,7 +2674,7 @@ with left_col:
         placeholder="简要描述产品的核心功能和定位",
         label_visibility="collapsed"
     )
-    st.markdown('<p class="form-hint">简要描述产品的核心功能和定位</p>', unsafe_allow_html=True)
+    st.markdown('<p class="form-hint"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>简要描述产品的核心功能和定位</p>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="form-group">', unsafe_allow_html=True)
@@ -2697,12 +2696,12 @@ with left_col:
         value=min(st.session_state.training_days, 10),
         label_visibility="collapsed"
     )
-    st.markdown(f'<p class="form-hint">当前选择：<strong>{training_days} 天</strong>（最长 10 天）</p>', unsafe_allow_html=True)
+    st.markdown(f'<p class="slider-info"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>当前选择：<strong>{training_days} 天</strong>（最长 10 天）</p>', unsafe_allow_html=True)
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="form-group">', unsafe_allow_html=True)
     st.markdown('<label class="form-label">产品类型</label>', unsafe_allow_html=True)
-    product_type_options = ["软件", "硬件", "SaaS", "平台", "其他"]
+    product_type_options = ["软件", "硬件", "服务", "平台"]
     product_type = st.selectbox(
         "",
         product_type_options,
@@ -2855,7 +2854,6 @@ with right_col:
 """, unsafe_allow_html=True)
 
 st.markdown("""
-        </div>
     </div>
 </section>
 """, unsafe_allow_html=True)
@@ -2863,9 +2861,13 @@ st.markdown("""
 # ============================================================
 if st.session_state.generation_complete:
     st.markdown("""
-    <div class="results-section">
-        <div class="features-title">生成结果</div>
-    </div>
+    <div class="gradient-divider"></div>
+    <section class="generator-section" style="padding: 3rem 1.5rem;">
+        <div class="container-generator">
+            <div class="section-heading-wrap">
+                <h2 class="section-heading-lg">生成结果</h2>
+                <p class="section-desc">以下是根据您的输入生成的完整培训材料</p>
+            </div>
     """, unsafe_allow_html=True)
     
     modules_with_content = [k for k in st.session_state.module_selection.keys() if st.session_state.module_selection[k] and k in st.session_state.generated_content]
@@ -2876,17 +2878,20 @@ if st.session_state.generation_complete:
         for i, (tab, module) in enumerate(zip(tabs, modules_with_content)):
             with tab:
                 content = st.session_state.generated_content[module]
-                st.markdown("<div class='result-card'>", unsafe_allow_html=True)
                 st.markdown(content)
-                st.markdown("</div>", unsafe_allow_html=True)
 
                 st.download_button(
-                    label=f"📥 下载 {MODULE_LABELS[module]}",
+                    label=f"下载 {MODULE_LABELS[module]}",
                     data=content,
                     file_name=f"{product_name}_{module}.md",
                     mime="text/markdown",
                     use_container_width=True
                 )
+    
+    st.markdown("""
+        </div>
+    </section>
+    """, unsafe_allow_html=True)
 
 # ============================================================
 

@@ -151,7 +151,6 @@ div[data-baseweb="slider"] div[data-testid="stThumbValue"] { background: linear-
     color: #6C63FF !important; font-weight: 500 !important;
 }
 .stDownloadButton > button:hover { background: rgba(108, 99, 255, 0.18) !important; }
-</style>
 
 /* ================================================
    智能培训设计器 - 企业培训智能化平台
@@ -2055,7 +2054,7 @@ body::before {
     padding: var(--sp-lg);
   }
 }
-
+</style>
 
 """, unsafe_allow_html=True)
 
